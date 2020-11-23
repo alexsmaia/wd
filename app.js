@@ -5,9 +5,10 @@ const PORT = process.env.PORT || 3000;
 const express = require('express');
 const app = express();
 
-app.get('/', (req, res) => {
-    res.send('We are home');
-});
+
+// Import Routes
+require('./init/router') (app);
+
 
 // Set server
 app.listen(PORT, () => console.log(`Listening on ${PORT}`));

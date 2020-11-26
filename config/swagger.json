@@ -3,6 +3,11 @@
     "info": {
         "title": "Watch & Do API",
         "description": "Watch & Do API",
+        "contact": {
+            "name": "Alexandre Maia",
+            "url": "http://wwwalexandremaia.pt",
+            "email": "info@alexandremaia.pt"
+        },
         "version": "1.0"
     },
     "produces": ["application/json"],
@@ -11,17 +16,15 @@
         "schemas":{
             "User": {
                 "type": "object",
-                "required": ["username", "password", "email"],
+                "required": ["id", "username", "password", "email", "role_id"],
                 "properties": {
-                    "username": {
-                        "type": "string"
-                    }, 
-                    "password": {
-                        "type": "string"
-                    },
-                    "email": {
-                        "type": "string"
-                    }
+                    "id": { "type": "integer", "format": "int32" },
+                    "username": { "type": "string" }, 
+                    "password": { "type": "string" },
+                    "email": { "type": "string" },
+                    "role_id": { "type": "integer", "format": "int32" },
+                    "createdAt": { "type": "string", "format": "date-time" },
+                    "updatedAt": { "type": "string", "format": "date-time" }
                 }
             }
         }
@@ -44,12 +47,14 @@
                                         {
                                             "id": "1",
                                             "name": "Daniel",
-                                            "email": "daniel@mail.pt"
+                                            "email": "daniel@mail.pt",
+                                            "role_id": "1"
                                         },
                                         {
                                             "id": "2",
                                             "name": "Joaquim",
-                                            "email": "joaquim@mail.pt"
+                                            "email": "joaquim@mail.pt",
+                                            "role_id": "1"
                                         }
                                     ]
                                 }

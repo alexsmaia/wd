@@ -1,0 +1,83 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+        "title": "Watch & Do API",
+        "description": "Watch & Do API",
+        "version": "1.0"
+    },
+    "produces": ["application/json"],
+    "schemes": ["http", "https"],
+    "components": {
+        "schemas":{
+            "User": {
+                "type": "object",
+                "required": ["username", "password", "email"],
+                "properties": {
+                    "username": {
+                        "type": "string"
+                    }, 
+                    "password": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    }, 
+    "paths": {
+        "/users": {
+            "get": {
+                "tags": ["Users"],
+                "description": "Get Users List",
+                "responses": {
+                    "200": {
+                        "description": "Users List",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#components/schemas/User"
+                                },
+                                "examples": {
+                                    "User List": [
+                                        {
+                                            "id": "1",
+                                            "name": "Daniel",
+                                            "email": "daniel@mail.pt"
+                                        },
+                                        {
+                                            "id": "2",
+                                            "name": "Joaquim",
+                                            "email": "joaquim@mail.pt"
+                                        }
+                                    ]
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Error": {
+                                        "value": "Error"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

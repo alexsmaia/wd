@@ -5,6 +5,9 @@ const PORT = process.env.PORT || 3000;
 const express = require('express');
 const app = express();
 
+// Set Middleware
+app.use(express.json());
+
 // Swagger
 const swaggerUi = require("swagger-ui-express"); 
 const swaggerDocument = require("./config/swagger.json")

@@ -12,7 +12,7 @@ exports.login = async function(req, res) {
     if (user) {
         bcrypt.compare(req.body.password, user.password).then(function(result) {
             if(result) {
-                token.generateToken({user: user.username}, (token) => {
+                token.generateToken({username: user.username, role: user.role_id}, (token) => {
                     res.status(200).json(token); 
                 })
             } else {

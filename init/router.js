@@ -1,8 +1,10 @@
 // Set middlewares
-let {auth} = require('../middleware/auth.js');
+let {isRegistered} = require('../middleware/isRegistered.js');
+let {isAdmin} = require('../middleware/isAdmin.js');
+let {isSupAdmin} = require('../middleware/isSupAdmin.js');
 
 // Set Routes Files
 module.exports = (app) => {
     app.use('/', require('../routes/auth.routes'));
-    app.use('/users', auth, require('../routes/user.routes'));
+    app.use('/users', isAdmin, require('../routes/user.routes'));
 }

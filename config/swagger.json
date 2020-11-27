@@ -27,6 +27,13 @@
                     "updatedAt": { "type": "string", "format": "date-time" }
                 }
             }
+        },
+        "securitySchemes": {
+            "bearer": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
         }
     }, 
     "paths": {
@@ -96,7 +103,10 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [{
+                    "bearer": []
+                }]
             }
         },
         "/login": {

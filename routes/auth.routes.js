@@ -9,9 +9,20 @@ const { validationResult, body } = require('express-validator')
 const models = require('../models');
 
 // Set Routes
-router.post('/login',  function (req, res) {
-    authController.login(req, res); 
+// User Login
+router.post('/login', [
+    body('username').notEmpty().escape(),
+    body('password').notEmpty().escape()
+], function (req, res) {
+    const errors = validationResult(req); 
+    if (errors.isEmpty()) {
+        authController.login(req, res); 
+    } else {
+        res.status(400).json({errors: errors.array()})
+    }
 })
+
+// New User
 router.post('/register', [
     body('username').notEmpty().escape().custom(value => {
         return models.User.findOne({
@@ -41,7 +52,7 @@ router.post('/register', [
     if (errors.isEmpty()) {
         authController.register(req, res); 
     } else {
-        res.status(404).json({errors: errors.array()})
+        res.status(400).json({errors: errors.array()})
     }
 })
 

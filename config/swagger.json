@@ -99,6 +99,61 @@
                 }
             }
         },
+        "/login": {
+            "post": {
+                "description": "Login",
+                "tags": ["Auth"],
+                "requestBody": {
+                    "content": {
+                        "application/json" : {
+                            "schema": {
+                                "$ref": "#components/schemas/User"
+                            },
+                            "examples": {
+                                "User": {
+                                    "value": {
+                                        "username":"admin", 
+                                        "password": "12345678"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Token",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Sucess": {
+                                        "value": "Bearer Token"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Error": {
+                                        "value": "Error"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/register": {
             "post": {
                 "description": "Register",
@@ -138,21 +193,6 @@
                         }
                     },
                     "400": {
-                        "description": "Error",
-                        "content": {
-                            "text/plain": {
-                                "schema": {
-                                    "type": "string"
-                                },
-                                "examples": {
-                                    "Error": {
-                                        "value": "Error"
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "404": {
                         "description": "Error",
                         "content": {
                             "text/plain": {

@@ -1,10 +1,29 @@
 const models = require('../models');
 const bcrypt = require('bcrypt');
+const token = require('../utilities/token')
 
 // User Login
-exports.login = async function(req, res, next) {
-    res.send('Login');
+exports.login = async function(req, res) {
+    const user = await models.User.findOne({
+        where: {
+            username: req.body.username,
+        }
+    })
+    if (user) {
+        bcrypt.compare(req.body.password, user.password).then(function(result) {
+            if(result) {
+                token.generateToken({user: user.username}, (token) => {
+                    res.status(200).json(token); 
+                })
+            } else {
+                res.status(401).send("Not Authorized"); 
+            }
+        });
+    } else {
+        res.status(401).send("Not Authorized");
+    }
 }
+
 // New User
 exports.register = function(req, res, next) {
     bcrypt.genSalt(10, function(err, salt) {

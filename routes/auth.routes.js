@@ -6,7 +6,12 @@ let router = express.Router();
 const UserController = require('../controllers/user.controller.js')
 
 // Set Routes
-router.get('/', UserController.users);
+router.get('/login', (req, res) => {
+    res.send('Login');
+});
+router.get('/register', (req, res) => {
+    res.send('Register');
+});
 
 // Export Routes
 module.exports = router;

@@ -1,4 +1,3 @@
-
 module.exports = (sequelize, DataTypes) => {
     var Topic = sequelize.define('Topic', {
         topic: {
@@ -9,14 +8,15 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        color: {
+        hexcolor: {
             type: DataTypes.STRING,
             allowNull: false,
-            unique: false,
+            unique: true,
         },
         status: {
             type: DataTypes.BOOLEAN,
             allowNull: false,
+            defaultValue: 1,
         },
     });
 

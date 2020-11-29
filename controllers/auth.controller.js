@@ -34,6 +34,8 @@ exports.register = function(req, res, next) {
                 password: hash,
             }).then(user => {
                 res.status(200).json("User Created");
+            }).catch(error => {
+                res.status(400).json({message:error});
             })
         });
     });

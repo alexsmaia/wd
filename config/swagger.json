@@ -14,9 +14,22 @@
     "schemes": ["http", "https"],
     "components": {
         "schemas":{
+            "Topic": {
+                "type": "object",
+                "required": ["topic", "desciption", "color"],
+                "properties": {
+                    "id": { "type": "integer", "format": "int32" },
+                    "topic": { "type": "string" }, 
+                    "desciption": { "type": "string" },
+                    "color": { "type": "string" },
+                    "status": { "type": "boolean", "default": "1" },
+                    "createdAt": { "type": "string", "format": "date-time" },
+                    "updatedAt": { "type": "string", "format": "date-time" }
+                }
+            },
             "User": {
                 "type": "object",
-                "required": ["id", "username", "password", "email", "role_id"],
+                "required": ["username", "password", "email", "role_id"],
                 "properties": {
                     "id": { "type": "integer", "format": "int32" },
                     "username": { "type": "string" }, 

@@ -6,7 +6,7 @@ const token = require('../utilities/token')
 exports.login = async function(req, res) {
     const user = await models.User.findOne({
         where: {
-            username: req.body.username,
+            username: req.body.username
         }
     })
     if (user) {

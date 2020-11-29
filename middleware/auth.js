@@ -8,7 +8,7 @@ exports.checkAuth = (authorization, callback) => {
     }
     token.validateToken(authorization, (result) => {
         if(result) {
-            // get the decoded payload ignoring signature, no secretOrPrivateKey needed
+            // get the decoded payload ignoring signature
             let decoded = jwt.decode(authorization.replace('Bearer ', ''));
             // get the decoded payload and header
             let data = decoded.data;

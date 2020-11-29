@@ -21,7 +21,6 @@ router.post('/login', [
         res.status(400).json({errors: errors.array()})
     }
 })
-
 // New User
 router.post('/register', [
     body('username').notEmpty().escape().custom(value => {
@@ -46,7 +45,8 @@ router.post('/register', [
             }
         })
     }), 
-    body('password').notEmpty().isLength({ min: 8 }).escape()
+    body('password').notEmpty().isLength({ min: 8 }).escape(),
+    body('passwordConfirmation').notEmpty().escape().custom((value, { req }) => value == req.body.password)
 ], function (req, res) {
     const errors = validationResult(req); 
     if (errors.isEmpty()) {

@@ -22,7 +22,8 @@
                     "username": { "type": "string" }, 
                     "password": { "type": "string" },
                     "email": { "type": "string" },
-                    "role_id": { "type": "integer", "format": "int32" },
+                    "status": { "type": "boolean", "default": "1" },
+                    "role_id": { "type": "integer", "format": "int32", "default": "1" },
                     "createdAt": { "type": "string", "format": "date-time" },
                     "updatedAt": { "type": "string", "format": "date-time" }
                 }
@@ -37,78 +38,6 @@
         }
     }, 
     "paths": {
-        "/users": {
-            "get": {
-                "tags": ["Users"],
-                "description": "Get Users List",
-                "responses": {
-                    "200": {
-                        "description": "Users List",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#components/schemas/User"
-                                },
-                                "examples": {
-                                    "User List": [
-                                        {
-                                            "id": "1",
-                                            "name": "Daniel",
-                                            "email": "daniel@mail.pt",
-                                            "role_id": "1"
-                                        },
-                                        {
-                                            "id": "2",
-                                            "name": "Joaquim",
-                                            "email": "joaquim@mail.pt",
-                                            "role_id": "1"
-                                        }
-                                    ]
-                                }
-                            },
-                            "text/plain": {
-                                "schema": {
-                                    "type": "string"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Error",
-                        "content": {
-                            "text/plain": {
-                                "schema": {
-                                    "type": "string"
-                                },
-                                "examples": {
-                                    "Error": {
-                                        "value": "Error"
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Error",
-                        "content": {
-                            "text/plain": {
-                                "schema": {
-                                    "type": "string"
-                                },
-                                "examples": {
-                                    "Unauthorized": {
-                                        "value": "Invalid Token"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [{
-                    "bearer": []
-                }]
-            }
-        },
         "/login": {
             "post": {
                 "description": "Login",
@@ -120,10 +49,22 @@
                                 "$ref": "#components/schemas/User"
                             },
                             "examples": {
-                                "User": {
+                                "Registered": {
+                                    "value": {
+                                        "username":"registered", 
+                                        "password": "12345678"
+                                    }
+                                },
+                                "Admin": {
                                     "value": {
                                         "username":"admin", 
                                         "password": "12345678"
+                                    }
+                                },
+                                "Super Admin": {
+                                    "value": {
+                                        "username":"supadmin", 
+                                        "password": "0123456789"
                                     }
                                 }
                             }
@@ -177,9 +118,10 @@
                             "examples": {
                                 "User": {
                                     "value": {
-                                        "username":"admin", 
-                                        "email":"admin@mail.pt", 
-                                        "password": "12345678"
+                                        "username":"newuser", 
+                                        "email":"newuser@mail.pt", 
+                                        "password": "12345678",
+                                        "passwordConfirmation": "12345678"
                                     }
                                 }
                             }
@@ -218,6 +160,565 @@
                         }
                     }
                 }
+            }
+        },
+        "/users": {
+            "get": {
+                "tags": ["Users"],
+                "description": "Get Users List<br>Role required Admin",
+                "responses": {
+                    "200": {
+                        "description": "Users List",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#components/schemas/User"
+                                },
+                                "examples": {
+                                    "User List": [
+                                        {
+                                            "id": "1",
+                                            "username": "Daniel",
+                                            "email": "daniel@mail.pt",
+                                            "status": "1",
+                                            "role_id": "1"
+                                        },
+                                        {
+                                            "id": "2",
+                                            "username": "Joaquim",
+                                            "email": "joaquim@mail.pt",
+                                            "status": "1",
+                                            "role_id": "1"
+                                        }
+                                    ]
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Error": {
+                                        "value": "Error"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Unauthorized": {
+                                        "value": "Invalid Token"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [{
+                    "bearer": []
+                }]
+            }
+        },
+        "/users/{id}": {
+            "get": {
+                "tags": ["Users"],
+                "description": "Get User Info by Id<br>Role required Admin",
+                "parameters": [{
+                    "name": "id",
+                    "in": "path",
+                    "description": "User Id",
+                    "required": true,
+                    "schema": {
+                        "type": "integer"
+                    }
+                }],
+                "responses": {
+                    "200": {
+                        "description": "User Info",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#components/schemas/User"
+                                },
+                                "examples": { 
+                                    "User": {
+                                        "id": "1",
+                                        "username": "Daniel",
+                                        "email": "daniel@mail.pt",
+                                        "status": "1",
+                                        "role_id": "1"
+                                    }
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Error": {
+                                        "value": "Error"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Unauthorized": {
+                                        "value": "Invalid Token"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [{
+                    "bearer": []
+                }]
+            },
+            "put": {
+                "tags": ["Users"],
+                "description": "Update User<br>Role required Admin",
+                "parameters": [{
+                    "name": "id",
+                    "in": "path",
+                    "description": "User Id",
+                    "required": true,
+                    "schema": {
+                        "type": "integer"
+                    }
+                }],
+                "requestBody": {
+                    "content": {
+                        "application/json" : {
+                            "schema": {
+                                "$ref": "#components/schemas/User"
+                            },
+                            "examples": {
+                                "User": {
+                                    "value": {
+                                        "username":"userupdate", 
+                                        "email":"userupdate@mail.pt"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            },
+                            "examples": {
+                                "Success": {
+                                    "value": "User Updated"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Error": {
+                                        "value": "Error"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Unauthorized": {
+                                        "value": "Invalid Token"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [{
+                    "bearer": []
+                }]
+            },
+            "delete": {
+                "tags": ["Users"],
+                "description": "<h2>Delete User</h2><br><p>User can't delete himself.</p><p>Role required: <strong>Super Admin</strong></p>",
+                "parameters": [{
+                    "name": "id",
+                    "in": "path",
+                    "description": "User Id",
+                    "required": true,
+                    "schema": {
+                        "type": "integer"
+                    }
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            },
+                            "examples": {
+                                "Success": {
+                                    "value": "User Deleted"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Error": {
+                                        "value": "Error"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Unauthorized": {
+                                        "value": "Invalid Token"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Unauthorized": {
+                                        "value": "Can't delete yourself"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [{
+                    "bearer": []
+                }]
+            }
+        },
+        "/users/{id}/password": {
+            "put": {
+                "tags": ["Users"],
+                "description": "Change User Password<br>Role required Admin",
+                "parameters": [{
+                    "name": "id",
+                    "in": "path",
+                    "description": "User Id",
+                    "required": true,
+                    "schema": {
+                        "type": "integer"
+                    }
+                }],
+                "requestBody": {
+                    "content": {
+                        "application/json" : {
+                            "schema": {
+                                "$ref": "#components/schemas/User"
+                            },
+                            "examples": {
+                                "User": {
+                                    "value": {
+                                        "password": "12345678",
+                                        "passwordConfirmation": "12345678"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            },
+                            "examples": {
+                                "Success": {
+                                    "value": "Password Changed"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Error": {
+                                        "value": "Error"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Unauthorized": {
+                                        "value": "Invalid Token"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [{
+                    "bearer": []
+                }]
+            }
+        },
+        "/users/{id}/role": {
+            "put": {
+                "tags": ["Users"],
+                "description": "<h2>Change User Role</h2><br><p>User can't delete himself.</p><p>Role required: <strong>Admin</strong></p>",
+                "parameters": [{
+                    "name": "id",
+                    "in": "path",
+                    "description": "User Id",
+                    "required": true,
+                    "schema": {
+                        "type": "integer"
+                    }
+                }],
+                "requestBody": {
+                    "content": {
+                        "application/json" : {
+                            "schema": {
+                                "$ref": "#components/schemas/User"
+                            },
+                            "examples": {
+                                "Register": {
+                                    "value": {
+                                        "role_id": "1"
+                                    }
+                                },
+                                "Admin": {
+                                    "value": {
+                                        "role_id": "2"
+                                    }
+                                },
+                                "Super Admin": {
+                                    "value": {
+                                        "role_id": "3"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            },
+                            "examples": {
+                                "Success": {
+                                    "value": "Password Changed"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Error": {
+                                        "value": "Error"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Unauthorized": {
+                                        "value": "Invalid Token"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Unauthorized": {
+                                        "value": "Can't delete yourself"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [{
+                    "bearer": []
+                }]
+            }
+        },
+        "/users/{id}/status": {
+            "put": {
+                "tags": ["Users"],
+                "description": "Change User Status<br>Role required Admin",
+                "parameters": [{
+                    "name": "id",
+                    "in": "path",
+                    "description": "User Id",
+                    "required": true,
+                    "schema": {
+                        "type": "integer"
+                    }
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            },
+                            "examples": {
+                                "Success": {
+                                    "value": "User Status Active<br>User Status Inactive"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Error": {
+                                        "value": "Error"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Unauthorized": {
+                                        "value": "Invalid Token"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [{
+                    "bearer": []
+                }]
             }
         }
     }

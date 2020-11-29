@@ -13,10 +13,15 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false,
         },
+        status: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: 1,
+        },
         role_id: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            defaultValue: 1
+            defaultValue: 1,
         },
     });
 

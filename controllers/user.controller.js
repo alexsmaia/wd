@@ -105,15 +105,11 @@ exports.status = async function(req, res, next) {
                 where : {
                     id : user.id
                 }
-            }).then(userUp => {
-                if (userUp.id > 0) {
-                    if (user.status) {
-                        res.status(200).json("User Status Active");
-                    } else {
-                        res.status(200).json("User Status Inactive");
-                    }
+            }).then(result => {
+                if (userStatus.status) {
+                    res.status(200).json("User Status Active");
                 } else {
-                    res.status(200).json("User Deleted");
+                    res.status(200).json("User Status Inactive");
                 }
             }).catch(error => {
                 res.status(400).json({message:error});

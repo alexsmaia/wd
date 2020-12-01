@@ -2,7 +2,7 @@
 const express = require('express');
 const router = express.Router();
 // Set Controller
-const topicController = require('../../controllers/wd/topics.controller.js')
+const controller = require('../../controllers/wd/topics.controller.js')
 // Set Validator
 const { validationResult, body, param } = require('express-validator')
 // Set Model
@@ -10,9 +10,13 @@ const models = require('../../models');
 // Set Middleware
 let {isSupAdmin} = require('../../middleware/isSupAdmin.js');
 
-// Set Routes
-router.get('/', topicController.topics);
 
+// * * Set Routes * * //
+
+// Get Topics List
+router.get('/', controller.topics);
+
+// Add Topic
 router.post('/', [
     body('topic').notEmpty().isLength({ max: 100 }).escape(),
     body('description').notEmpty().escape(),
@@ -20,23 +24,25 @@ router.post('/', [
 ], function (req, res) {
     const errors = validationResult(req); 
     if (errors.isEmpty()) {
-        topicController.add(req, res); 
+        controller.add(req, res); 
     } else {
         res.status(400).json({errors: errors.array()})
     }
 })
 
+// Get Topic by Id
 router.get('/:id', [
     param('id').notEmpty().escape(), 
 ],  function (req, res) {
     const errors = validationResult(req); 
     if (errors.isEmpty()) {
-        topicController.topic(req, res); 
+        controller.topic(req, res); 
     } else {
         res.status(400).json({errors: errors.array()})
     }
 })
 
+// Update Topic
 router.put('/:id', [
     param('id').notEmpty().escape(),
     body('topic').notEmpty().isLength({ max: 100 }).escape(),
@@ -45,24 +51,35 @@ router.put('/:id', [
 ], function (req, res) {
     const errors = validationResult(req); 
     if (errors.isEmpty()) {
-        topicController.update(req, res); 
+        controller.update(req, res); 
     } else {
         res.status(400).json({errors: errors.array()})
     }
 })
 
+// Delete Topic
 router.delete('/:id', [
     param('id').notEmpty().escape(),
 ], isSupAdmin, function (req, res) {
     const errors = validationResult(req); 
     if (errors.isEmpty()) {
-        topicController.delete(req, res); 
+        controller.delete(req, res); 
     } else {
         res.status(400).json({errors: errors.array()})
     }
 })
 
-router.put('/:id/status', topicController.status);
+// Update Topic Status
+router.put('/:id/status', [
+    param('id').notEmpty().escape(), 
+],  function (req, res) {
+    const errors = validationResult(req); 
+    if (errors.isEmpty()) {
+        controller.status(req, res); 
+    } else {
+        res.status(400).json({errors: errors.array()})
+    }
+});
 
 
 // Export Routes

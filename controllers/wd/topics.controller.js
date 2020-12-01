@@ -1,12 +1,12 @@
 const models = require('../../models');
 
 // Get List of Topics
-exports.topics = async function(req, res, next) {
+exports.topics = async function(req, res) {
     try {
-        const users = await models.Topic.findAll({
+        const topics = await models.Topic.findAll({
             attributes: ['id', 'topic', 'description', 'status']
         });
-        res.status(200).json(users);
+        res.status(200).json(topics);
     } catch (error) {
         res.status(400).json({message:error});
     }
@@ -20,7 +20,7 @@ exports.topic = async function(req, res, next) {
         if (topic.id > 0) {
             res.status(200).json(topic);
         } else {
-            res.status(400).send("Error"); 
+            res.status(400).json("Error"); 
         }
     } catch (error) {
         res.status(400).json({message:error});
@@ -37,7 +37,7 @@ exports.add = function(req, res, next) {
         res.status(200).json(`Topic ${topic.topic} Created`);
     }).catch(error => {
         res.status(400).json({message:error});
-    })
+    });
 }
 
 // Update Topic
@@ -70,7 +70,11 @@ exports.delete = function(req, res, next) {
             id : req.params.id
         }
     }).then(result => {
-        res.status(200).json("Topic Deleted");
+        if (result) {
+            res.status(200).json("Topic Deleted");
+        } else {
+            res.status(400).json("error");
+        }
     }).catch(error => {
         res.status(400).json({message:error});
     });
@@ -80,35 +84,35 @@ exports.delete = function(req, res, next) {
 exports.status = async function(req, res, next) {
     try {
         // Get Topic
-        const topic = await models.Topic.findOne({
+        const item = await models.Topic.findOne({
             where: { id: req.params.id }
         });
-        if (topic.id > 0) {
-            let topicStatus = {};
-            if (topic.status) {
-                topicStatus.status = false;
+        if (item.id > 0) {
+            let itemStatus = {};
+            if (item.status) {
+                itemStatus.status = false;
             } else {
-                topicStatus.status = true;
+                itemStatus.status = true;
             }
-            return models.Topic.update(topicStatus, {
+            return models.Topic.update(itemStatus, {
                 where : {
-                    id : topic.id
+                    id : item.id
                 }
             }).then(result => {
                 if (result) {
-                    if (topicStatus.status) {
-                        res.status(200).json("Topic Status Active");
+                    if (itemStatus.status) {
+                        res.status(200).json(`Topic ${item.topic} Active`);
                     } else {
-                        res.status(200).json("Topic Status Inactive");
+                        res.status(200).json(`Topic ${item.topic} Inactive`);
                     }
                 } else {
-                    res.status(200).json("Topic Updated");
+                    res.status(400).json("Error");
                 }
             }).catch(error => {
                 res.status(400).json({message:error});
             })
         } else {
-            res.status(400).send("Error"); 
+            res.status(400).json("Error"); 
         }
     } catch (error) {
         res.status(400).json({message:error});

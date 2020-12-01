@@ -16,14 +16,14 @@ exports.login = function(req, res) {
                         res.status(200).json(token); 
                     })
                 } else {
-                    res.status(401).send("Not Authorized"); 
+                    res.status(401).json("Not Authorized"); 
                 }
             });
         } else {
-            res.status(401).send("Not Authorized");
+            res.status(401).json("Not Authorized");
         }
     }).catch(error => {
-        res.send(400).json({message: error})
+        res.status(400).json({message: error})
     })
 }
 

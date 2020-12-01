@@ -22,7 +22,7 @@ exports.user = async function(req, res) {
         if (user.id > 0) {
             res.status(200).json(user);
         } else {
-            res.status(400).send("Error"); 
+            res.status(400).json("Error"); 
         }
     } catch (error) {
         res.status(400).json({message:error});
@@ -87,7 +87,7 @@ exports.status = function(req, res) {
                         res.status(400).json({message:error});
                     });
                 } else {
-                    res.status(401).send("Not Authorized");
+                    res.status(401).json("Not Authorized");
                 }
             }).catch(error => {
                 res.status(400).json({message:error});
@@ -95,7 +95,7 @@ exports.status = function(req, res) {
                 res.status(400).json({message:error});
             });
         } else {
-            res.status(409).send("Can't change your own Status");
+            res.status(409).json("Can't change your own Status");
         }
     })
 }

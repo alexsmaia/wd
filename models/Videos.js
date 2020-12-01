@@ -1,14 +1,10 @@
 module.exports = (sequelize, DataTypes) => {
-    var Topic = sequelize.define('Topic', {
-        topic: {
+    const Video = sequelize.define('Video', {
+        title: {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        description: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
-        hexcolor: {
+        youtubeid: {
             type: DataTypes.STRING,
             allowNull: false,
             unique: true,
@@ -20,9 +16,9 @@ module.exports = (sequelize, DataTypes) => {
         },
     });
     
-    Topic.associate = function(models) {
-        Topic.belongsToMany(models.Video, {through: 'TopicVideo'});
+    Video.associate = function(models) {
+        Video.belongsToMany(models.Topic, {through: 'TopicVideo'});
     };
 
-    return Topic;
+    return Video;
 };

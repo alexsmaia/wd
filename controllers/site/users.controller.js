@@ -35,13 +35,13 @@ exports.update = function(req, res) {
                         res.status(400).json("Error");
                     }
                 }).catch(error => {
-                    res.send(400).json({message: error})
+                    res.status(400).json({message: error})
                 });
             } else {
-                res.status(401).send("Not Authorized");
+                res.status(401).json("Not Authorized");
             }
         }).catch(error => {
-            res.send(400).json({message: error})
+            res.status(400).json({message: error})
         });
     })
 }
@@ -70,7 +70,7 @@ exports.password = function(req, res) {
                 });
             });
         } else {
-            res.status(401).send("Not Authorized");
+            res.status(401).json("Not Authorized");
         }
     })
 }

@@ -836,7 +836,7 @@
                 "tags": [
                     "Topics"
                 ],
-                "description": "<h2>Delete Topic</h2><br><p>Role required: <strong>Super Admin</strong></p>",
+                "description": "<h2>Delete Topic</h2><br><p>Topics with associated Videos cannot be deleted.</p><br><p>Role required: <strong>Super Admin</strong></p>",
                 "parameters": [
                     {
                         "name": "id",
@@ -889,6 +889,21 @@
                                 "examples": {
                                     "Unauthorized": {
                                         "value": "Invalid Token"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Unauthorized": {
+                                        "value": "Can't delete associated Topic"
                                     }
                                 }
                             }

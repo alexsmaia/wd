@@ -2,13 +2,13 @@
 const express = require('express');
 const router = express.Router();
 // Set Controller
-const topicController = require('../controllers/topic.controller.js')
+const topicController = require('../../controllers/wd/topics.controller.js')
 // Set Validator
 const { validationResult, body, param } = require('express-validator')
 // Set Model
-const models = require('../models');
+const models = require('../../models');
 // Set Middleware
-let {isSupAdmin} = require('../middleware/isSupAdmin.js');
+let {isSupAdmin} = require('../../middleware/isSupAdmin.js');
 
 // Set Routes
 router.get('/', topicController.topics);

@@ -1,4 +1,4 @@
-const models = require('../models');
+const models = require('../../models');
 
 // Get List of Topics
 exports.topics = async function(req, res, next) {
@@ -53,7 +53,11 @@ exports.update = function(req, res, next) {
             id : req.params.id
         }
     }).then(result => {
-        res.status(200).json("Topic Updated");
+        if (result) {
+            res.status(200).json("Topic Updated");
+        } else {
+            res.status(400).json("error");
+        }
     }).catch(error => {
         res.status(400).json({message:error});
     })
@@ -71,7 +75,6 @@ exports.delete = function(req, res, next) {
         res.status(400).json({message:error});
     });
 }
-
 
 // Change Topic Satus
 exports.status = async function(req, res, next) {
@@ -92,10 +95,14 @@ exports.status = async function(req, res, next) {
                     id : topic.id
                 }
             }).then(result => {
-                if (topicStatus.status) {
-                    res.status(200).json("Topic Status Active");
+                if (result) {
+                    if (topicStatus.status) {
+                        res.status(200).json("Topic Status Active");
+                    } else {
+                        res.status(200).json("Topic Status Inactive");
+                    }
                 } else {
-                    res.status(200).json("Topic Status Inactive");
+                    res.status(200).json("Topic Updated");
                 }
             }).catch(error => {
                 res.status(400).json({message:error});

@@ -4,7 +4,8 @@ let {isAdmin} = require('../middleware/isAdmin.js');
 
 // Set Routes Files
 module.exports = (app) => {
-    app.use('/', require('../routes/auth.routes'));
-    app.use('/topics', isAdmin, require('../routes/topic.routes'));
-    app.use('/users', isAdmin, require('../routes/user.routes'));
+    app.use('/', require('../routes/site/auth.routes'));
+    app.use('/users', isRegistered, require('../routes/site/users.routes'));
+    app.use('/wd/topics', isAdmin, require('../routes/wd/topics.routes'));
+    app.use('/wd/users', isAdmin, require('../routes/wd/users.routes'));
 }

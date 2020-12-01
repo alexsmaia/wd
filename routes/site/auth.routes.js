@@ -2,11 +2,11 @@
 const express = require('express');
 const router = express.Router();
 // Set Controller
-const authController = require('../controllers/auth.controller.js')
+const authController = require('../../controllers/site/auth.controller.js')
 // Set Validator
 const { validationResult, body } = require('express-validator')
 // Set Model
-const models = require('../models');
+const models = require('../../models');
 
 // Set Routes
 // User Login

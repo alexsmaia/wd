@@ -10,35 +10,89 @@
         },
         "version": "1.0"
     },
-    "produces": ["application/json"],
-    "schemes": ["http", "https"],
+    "produces": [
+        "application/json"
+    ],
+    "schemes": [
+        "http",
+        "https"
+    ],
     "components": {
-        "schemas":{
+        "schemas": {
             "Topic": {
                 "type": "object",
-                "required": ["topic", "desciption", "hexcolor"],
+                "required": [
+                    "topic",
+                    "desciption",
+                    "hexcolor"
+                ],
                 "properties": {
-                    "id": { "type": "integer", "format": "int32" },
-                    "topic": { "type": "string" }, 
-                    "desciption": { "type": "string" },
-                    "hexcolor": { "type": "string" },
-                    "status": { "type": "boolean", "default": "1" },
-                    "createdAt": { "type": "string", "format": "date-time" },
-                    "updatedAt": { "type": "string", "format": "date-time" }
+                    "id": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "topic": {
+                        "type": "string"
+                    },
+                    "desciption": {
+                        "type": "string"
+                    },
+                    "hexcolor": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "boolean",
+                        "default": "1"
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updatedAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
                 }
             },
             "User": {
                 "type": "object",
-                "required": ["username", "password", "email", "role_id"],
+                "required": [
+                    "username",
+                    "password",
+                    "email",
+                    "role_id"
+                ],
                 "properties": {
-                    "id": { "type": "integer", "format": "int32" },
-                    "username": { "type": "string" }, 
-                    "password": { "type": "string" },
-                    "email": { "type": "string" },
-                    "status": { "type": "boolean", "default": "1" },
-                    "role_id": { "type": "integer", "format": "int32", "default": "1" },
-                    "createdAt": { "type": "string", "format": "date-time" },
-                    "updatedAt": { "type": "string", "format": "date-time" }
+                    "id": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "username": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "boolean",
+                        "default": "1"
+                    },
+                    "role_id": {
+                        "type": "integer",
+                        "format": "int32",
+                        "default": "1"
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updatedAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
                 }
             }
         },
@@ -49,34 +103,36 @@
                 "bearerFormat": "JWT"
             }
         }
-    }, 
+    },
     "paths": {
         "/login": {
             "post": {
                 "description": "Login",
-                "tags": ["Auth"],
+                "tags": [
+                    "Auth"
+                ],
                 "requestBody": {
                     "content": {
-                        "application/json" : {
+                        "application/json": {
                             "schema": {
                                 "$ref": "#components/schemas/User"
                             },
                             "examples": {
                                 "Registered": {
                                     "value": {
-                                        "username":"registered", 
+                                        "username": "registered",
                                         "password": "12345678"
                                     }
                                 },
                                 "Admin": {
                                     "value": {
-                                        "username":"admin", 
+                                        "username": "admin",
                                         "password": "12345678"
                                     }
                                 },
                                 "Super Admin": {
                                     "value": {
-                                        "username":"supadmin", 
+                                        "username": "supadmin",
                                         "password": "0123456789"
                                     }
                                 }
@@ -121,18 +177,20 @@
         "/register": {
             "post": {
                 "description": "Register",
-                "tags": ["Auth"],
+                "tags": [
+                    "Auth"
+                ],
                 "requestBody": {
                     "content": {
-                        "application/json" : {
+                        "application/json": {
                             "schema": {
                                 "$ref": "#components/schemas/User"
                             },
                             "examples": {
                                 "User": {
                                     "value": {
-                                        "username":"newuser", 
-                                        "email":"newuser@mail.pt", 
+                                        "username": "newuser",
+                                        "email": "newuser@mail.pt",
                                         "password": "12345678",
                                         "passwordConfirmation": "12345678"
                                     }
@@ -175,9 +233,259 @@
                 }
             }
         },
-        "/topics": {
+        "/users/{id}": {
+            "put": {
+                "tags": [
+                    "Users"
+                ],
+                "description": "<h2>Update User</h2><br><p>Register Users can update her own info</p><p>Admin Users can update Register Users info and her own.</p><p>Super Admin can update all Users</p><br><p>Role required: <strong>Register</strong>",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "User Id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#components/schemas/User"
+                            },
+                            "examples": {
+                                "User": {
+                                    "value": {
+                                        "username": "userupdate",
+                                        "email": "userupdate@mail.pt"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            },
+                            "examples": {
+                                "Success": {
+                                    "value": "User Updated"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Error": {
+                                        "value": "Error"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Unauthorized": {
+                                        "value": "Invalid Token"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/users/profile": {
             "get": {
-                "tags": ["Topics"],
+                "tags": [
+                    "Users"
+                ],
+                "description": "<h2>User Profile</h2><br><p>Only can access own Profile</p><br><p>Role required: <strong>Register</strong>",
+                "responses": {
+                    "200": {
+                        "description": "User Info",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#components/schemas/User"
+                                },
+                                "examples": {
+                                    "User": {
+                                        "id": "1",
+                                        "username": "Daniel",
+                                        "email": "daniel@mail.pt",
+                                        "password": "$2b$10$WdJlO4C.6ZUnOkqVY996Ye8esJPvSMFRuPZzg4udDFZqjSEWv8L3G",
+                                        "status": "1",
+                                        "role_id": "1",
+                                        "createdAt": "2020-11-27T10:55:33.000Z",
+                                        "updatedAt": "2020-11-30T22:41:53.000Z"
+                                    }
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Error": {
+                                        "value": "Error"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Unauthorized": {
+                                        "value": "Invalid Token"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/users/{id}/password": {
+            "put": {
+                "tags": [
+                    "Users"
+                ],
+                "description": "<h2>Change User Password</h2><br><p>Users can change their own passowrds or Super Admin can change any password.</p><p>Role required: <strong>Register</strong></p>",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "User Id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#components/schemas/User"
+                            },
+                            "examples": {
+                                "User": {
+                                    "value": {
+                                        "password": "12345678",
+                                        "passwordConfirmation": "12345678"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            },
+                            "examples": {
+                                "Success": {
+                                    "value": "Password Changed"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Error": {
+                                        "value": "Error"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Unauthorized": {
+                                        "value": "Invalid Token"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/wd/topics": {
+            "get": {
+                "tags": [
+                    "Topics"
+                ],
                 "description": "<h2>Get Topics List</h2><br><p>Role required: <strong>Admin</strong></p>",
                 "responses": {
                     "200": {
@@ -244,24 +552,28 @@
                         }
                     }
                 },
-                "security": [{
-                    "bearer": []
-                }]
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
             },
             "post": {
-                "tags": ["Topics"],
+                "tags": [
+                    "Topics"
+                ],
                 "description": "<h2>Create new Topic</h2><br><p>Role required: <strong>Admin</strong></p>",
                 "requestBody": {
                     "content": {
-                        "application/json" : {
+                        "application/json": {
                             "schema": {
                                 "$ref": "#components/schemas/Topic"
                             },
                             "examples": {
                                 "Topic": {
                                     "value": {
-                                        "topic":"New Topic", 
-                                        "description":"Net Topic description", 
+                                        "topic": "New Topic",
+                                        "description": "Net Topic description",
                                         "hexcolor": "#F1C40F"
                                     }
                                 }
@@ -316,24 +628,30 @@
                         }
                     }
                 },
-                "security": [{
-                    "bearer": []
-                }]
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
             }
         },
-        "/topics/{id}": {
+        "/wd/topics/{id}": {
             "get": {
-                "tags": ["Topics"],
+                "tags": [
+                    "Topics"
+                ],
                 "description": "Get Topic Info by Id<br>Role required Admin",
-                "parameters": [{
-                    "name": "id",
-                    "in": "path",
-                    "description": "Topic Id",
-                    "required": true,
-                    "schema": {
-                        "type": "integer"
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Topic Id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
                     }
-                }],
+                ],
                 "responses": {
                     "200": {
                         "description": "Topic Info",
@@ -342,7 +660,7 @@
                                 "schema": {
                                     "$ref": "#components/schemas/Topic"
                                 },
-                                "examples": { 
+                                "examples": {
                                     "Topic": {
                                         "id": "1",
                                         "Topic": "HTML",
@@ -390,33 +708,39 @@
                         }
                     }
                 },
-                "security": [{
-                    "bearer": []
-                }]
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
             },
             "put": {
-                "tags": ["Topics"],
+                "tags": [
+                    "Topics"
+                ],
                 "description": "<h2>Update Topic</h2><br><p>Role required: <strong>Admin</strong></p>",
-                "parameters": [{
-                    "name": "id",
-                    "in": "path",
-                    "description": "Topic Id",
-                    "required": true,
-                    "schema": {
-                        "type": "integer"
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Topic Id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
                     }
-                }],
+                ],
                 "requestBody": {
                     "content": {
-                        "application/json" : {
+                        "application/json": {
                             "schema": {
                                 "$ref": "#components/schemas/Topic"
                             },
                             "examples": {
                                 "Topic": {
                                     "value": {
-                                        "topic":"Updated Topic", 
-                                        "description":"Updated Topic description", 
+                                        "topic": "Updated Topic",
+                                        "description": "Updated Topic description",
                                         "hexcolor": "#F1C40F"
                                     }
                                 }
@@ -471,22 +795,28 @@
                         }
                     }
                 },
-                "security": [{
-                    "bearer": []
-                }]
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
             },
             "delete": {
-                "tags": ["Topics"],
+                "tags": [
+                    "Topics"
+                ],
                 "description": "<h2>Delete Topic</h2><br><p>Role required: <strong>Super Admin</strong></p>",
-                "parameters": [{
-                    "name": "id",
-                    "in": "path",
-                    "description": "Topic Id",
-                    "required": true,
-                    "schema": {
-                        "type": "integer"
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Topic Id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
                     }
-                }],
+                ],
                 "responses": {
                     "200": {
                         "description": "Success",
@@ -534,24 +864,30 @@
                         }
                     }
                 },
-                "security": [{
-                    "bearer": []
-                }]
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
             }
         },
-        "/topics/{id}/status": {
+        "/wd/topics/{id}/status": {
             "put": {
-                "tags": ["Topics"],
+                "tags": [
+                    "Topics"
+                ],
                 "description": "<h2>Change Topic Status</h2><br><p>Role required: <strong>Admin</strong></p>",
-                "parameters": [{
-                    "name": "id",
-                    "in": "path",
-                    "description": "Topic Id",
-                    "required": true,
-                    "schema": {
-                        "type": "integer"
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Topic Id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
                     }
-                }],
+                ],
                 "responses": {
                     "200": {
                         "description": "Success",
@@ -599,14 +935,18 @@
                         }
                     }
                 },
-                "security": [{
-                    "bearer": []
-                }]
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
             }
         },
-        "/users": {
+        "/wd/users": {
             "get": {
-                "tags": ["Users"],
+                "tags": [
+                    "Users"
+                ],
                 "description": "Get Users List<br>Role required Admin",
                 "responses": {
                     "200": {
@@ -673,24 +1013,30 @@
                         }
                     }
                 },
-                "security": [{
-                    "bearer": []
-                }]
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
             }
         },
-        "/users/{id}": {
+        "/wd/users/{id}": {
             "get": {
-                "tags": ["Users"],
+                "tags": [
+                    "Users"
+                ],
                 "description": "Get User Info by Id<br>Role required Admin",
-                "parameters": [{
-                    "name": "id",
-                    "in": "path",
-                    "description": "User Id",
-                    "required": true,
-                    "schema": {
-                        "type": "integer"
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "User Id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
                     }
-                }],
+                ],
                 "responses": {
                     "200": {
                         "description": "User Info",
@@ -699,7 +1045,7 @@
                                 "schema": {
                                     "$ref": "#components/schemas/User"
                                 },
-                                "examples": { 
+                                "examples": {
                                     "User": {
                                         "id": "1",
                                         "username": "Daniel",
@@ -747,33 +1093,39 @@
                         }
                     }
                 },
-                "security": [{
-                    "bearer": []
-                }]
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
             },
             "put": {
-                "tags": ["Users"],
-                "description": "Update User<br>Role required Admin",
-                "parameters": [{
-                    "name": "id",
-                    "in": "path",
-                    "description": "User Id",
-                    "required": true,
-                    "schema": {
-                        "type": "integer"
+                "tags": [
+                    "Users"
+                ],
+                "description": "<h2>Update User</h2><br><p>Only Super Admin can update data from other Super Admin</p><p>Role required: <strong>Admin</strong>",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "User Id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
                     }
-                }],
+                ],
                 "requestBody": {
                     "content": {
-                        "application/json" : {
+                        "application/json": {
                             "schema": {
                                 "$ref": "#components/schemas/User"
                             },
                             "examples": {
                                 "User": {
                                     "value": {
-                                        "username":"userupdate", 
-                                        "email":"userupdate@mail.pt"
+                                        "username": "userupdate",
+                                        "email": "userupdate@mail.pt"
                                     }
                                 }
                             }
@@ -827,22 +1179,28 @@
                         }
                     }
                 },
-                "security": [{
-                    "bearer": []
-                }]
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
             },
             "delete": {
-                "tags": ["Users"],
+                "tags": [
+                    "Users"
+                ],
                 "description": "<h2>Delete User</h2><br><p>User can't delete himself.</p><p>Role required: <strong>Super Admin</strong></p>",
-                "parameters": [{
-                    "name": "id",
-                    "in": "path",
-                    "description": "User Id",
-                    "required": true,
-                    "schema": {
-                        "type": "integer"
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "User Id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
                     }
-                }],
+                ],
                 "responses": {
                     "200": {
                         "description": "Success",
@@ -905,109 +1263,33 @@
                         }
                     }
                 },
-                "security": [{
-                    "bearer": []
-                }]
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
             }
         },
-        "/users/{id}/password": {
+        "/wd/users/{id}/role": {
             "put": {
-                "tags": ["Users"],
-                "description": "Change User Password<br>Role required Admin",
-                "parameters": [{
-                    "name": "id",
-                    "in": "path",
-                    "description": "User Id",
-                    "required": true,
-                    "schema": {
-                        "type": "integer"
+                "tags": [
+                    "Users"
+                ],
+                "description": "<h2>Change User Role</h2><br><p>Super Admin can only assign Roles to others Users excluding him self.</p><p>Role required: <strong>Super Admin</strong></p>",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "User Id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
                     }
-                }],
+                ],
                 "requestBody": {
                     "content": {
-                        "application/json" : {
-                            "schema": {
-                                "$ref": "#components/schemas/User"
-                            },
-                            "examples": {
-                                "User": {
-                                    "value": {
-                                        "password": "12345678",
-                                        "passwordConfirmation": "12345678"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "text/plain": {
-                                "schema": {
-                                    "type": "string"
-                                }
-                            },
-                            "examples": {
-                                "Success": {
-                                    "value": "Password Changed"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Error",
-                        "content": {
-                            "text/plain": {
-                                "schema": {
-                                    "type": "string"
-                                },
-                                "examples": {
-                                    "Error": {
-                                        "value": "Error"
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Error",
-                        "content": {
-                            "text/plain": {
-                                "schema": {
-                                    "type": "string"
-                                },
-                                "examples": {
-                                    "Unauthorized": {
-                                        "value": "Invalid Token"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [{
-                    "bearer": []
-                }]
-            }
-        },
-        "/users/{id}/role": {
-            "put": {
-                "tags": ["Users"],
-                "description": "<h2>Change User Role</h2><br><p>User can't delete himself.</p><p>Role required: <strong>Admin</strong></p>",
-                "parameters": [{
-                    "name": "id",
-                    "in": "path",
-                    "description": "User Id",
-                    "required": true,
-                    "schema": {
-                        "type": "integer"
-                    }
-                }],
-                "requestBody": {
-                    "content": {
-                        "application/json" : {
+                        "application/json": {
                             "schema": {
                                 "$ref": "#components/schemas/User"
                             },
@@ -1093,24 +1375,30 @@
                         }
                     }
                 },
-                "security": [{
-                    "bearer": []
-                }]
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
             }
         },
-        "/users/{id}/status": {
+        "/wd/users/{id}/status": {
             "put": {
-                "tags": ["Users"],
-                "description": "Change User Status<br>Role required Admin",
-                "parameters": [{
-                    "name": "id",
-                    "in": "path",
-                    "description": "User Id",
-                    "required": true,
-                    "schema": {
-                        "type": "integer"
+                "tags": [
+                    "Users"
+                ],
+                "description": "<h2>Change User Status</h2><br><p>Can't change own status</p><p>Only Super Admin can change other Super Admin Status<p></p><p>Role required: <strong>Admin</strong></p>",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "User Id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
                     }
-                }],
+                ],
                 "responses": {
                     "200": {
                         "description": "Success",
@@ -1156,11 +1444,28 @@
                                 }
                             }
                         }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Unauthorized": {
+                                        "value": "Can't change your own Status"
+                                    }
+                                }
+                            }
+                        }
                     }
                 },
-                "security": [{
-                    "bearer": []
-                }]
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
             }
         }
     }

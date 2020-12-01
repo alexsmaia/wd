@@ -1,5 +1,7 @@
 var jwt = require('jsonwebtoken');
+const models = require('../models');
 
+// Generate Tokem
 exports.generateToken = (user_info, callback) => {
     let secret = process.env.SECRET; 
     let token = jwt.sign({
@@ -7,7 +9,7 @@ exports.generateToken = (user_info, callback) => {
     }, secret, {expiresIn: '24h'});
     return callback(token); 
 }
-
+// Validate Token
 exports.validateToken = (token, callback) => {
     if(!token) {
         return callback(false); 
@@ -20,4 +22,25 @@ exports.validateToken = (token, callback) => {
             return callback(true);
         }
     })
+}
+// Get Loged User
+exports.getLogedUser = (authorization, callback) => {    
+    // get the decoded payload ignoring signature
+    let decoded = jwt.decode(authorization.replace('Bearer ', ''));
+    let user_id = decoded.data.user_id;
+    // Find login user
+    return models.User.findOne({
+        where : { id : user_id }
+    }).then(logedUser => {
+        return callback(logedUser);
+    }).catch(error => {
+        return callback(false);
+    });
+}
+// Get Loged User
+exports.getLogedId = (authorization, callback) => {    
+    // get the decoded payload ignoring signature
+    let decoded = jwt.decode(authorization.replace('Bearer ', ''));
+    let user_id = decoded.data.user_id;
+    return callback(user_id);
 }

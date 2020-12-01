@@ -11,8 +11,9 @@ exports.topics = async function(req, res) {
         res.status(400).json({message:error});
     }
 }
+
 // Get Topic by Id
-exports.topic = async function(req, res, next) {
+exports.topic = async function(req, res) {
     try {
         const topic = await models.Topic.findOne({
             where: { id: req.params.id }
@@ -28,7 +29,7 @@ exports.topic = async function(req, res, next) {
 }
 
 // Add new Topic
-exports.add = function(req, res, next) {
+exports.add = function(req, res) {
     return models.Topic.create({
         topic: req.body.topic,
         description: req.body.description,
@@ -41,7 +42,7 @@ exports.add = function(req, res, next) {
 }
 
 // Update Topic
-exports.update = function(req, res, next) {
+exports.update = function(req, res) {
     // Get Topic Update Data
     let updateTopic = {};
     updateTopic.topic = req.body.topic;
@@ -64,7 +65,7 @@ exports.update = function(req, res, next) {
 }
 
 // Delete Topic
-exports.delete = function(req, res, next) {
+exports.delete = function(req, res) {
     return models.Topic.destroy({
         where : {
             id : req.params.id
@@ -81,7 +82,7 @@ exports.delete = function(req, res, next) {
 }
 
 // Change Topic Satus
-exports.status = async function(req, res, next) {
+exports.status = async function(req, res) {
     try {
         // Get Topic
         const item = await models.Topic.findOne({

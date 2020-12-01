@@ -2,7 +2,7 @@ const models = require('../../models');
 const token = require('../../utilities/token');
 
 // Get List of Users
-exports.users = async function(req, res, next) {
+exports.users = async function(req, res) {
     try {
         const users = await models.User.findAll({
             attributes: ['id', 'username', 'email', 'status', 'role_id']
@@ -101,7 +101,7 @@ exports.status = function(req, res) {
 }
 
 // Change User Role
-exports.changeRole = async function(req, res, next) {
+exports.changeRole = async function(req, res) {
     token.getLogedId(req.headers.authorization, (logedUserId) => {
         if (logedUserId == req.params.id) {
             res.status(409).json("Can't change your own Role");

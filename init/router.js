@@ -8,5 +8,5 @@ module.exports = (app) => {
     app.use('/users', isRegistered, require('../routes/site/users.routes'));
     app.use('/wd/topics', isAdmin, require('../routes/wd/topics.routes'));
     app.use('/wd/users', isAdmin, require('../routes/wd/users.routes'));
-    app.use('/wd/videos', require('../routes/wd/videos.routes'));
+    app.use('/wd/videos', isAdmin, require('../routes/wd/videos.routes'));
 }

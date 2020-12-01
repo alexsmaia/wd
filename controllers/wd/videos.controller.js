@@ -12,20 +12,15 @@ exports.videos = async function(req, res) {
     }
 }
 
-// Get Topic by Id
+// Get Video by Id
 exports.video = async function(req, res) {
-    try {
-        const video = await models.Topic.findOne({
-            where: { id: req.params.id }
-        });
-        if (topic.id > 0) {
-            res.status(200).json(video);
-        } else {
-            res.status(400).json("Error"); 
-        }
-    } catch (error) {
+    return models.Video.findOne({
+        where: { id: req.params.id }
+    }).then(video => {
+        res.status(200).json(video);
+    }).catch(error => {
         res.status(400).json({message:error});
-    }
+    });
 }
 
 // Add Video
@@ -89,11 +84,9 @@ exports.update = function(req, res) {
 }
 
 // Delete Topic
-exports.delete = function(req, res, next) {
+exports.delete = function(req, res) {
     return models.Video.destroy({
-        where : {
-            id : req.params.id
-        }
+        where : { id : req.params.id }
     }).then(result => {
         if (result) {
             res.status(200).json("Video Deleted");
@@ -106,7 +99,7 @@ exports.delete = function(req, res, next) {
 }
 
 // Change Video Satus
-exports.status = async function(req, res, next) {
+exports.status = async function(req, res) {
     try {
         // Get Topic
         const item = await models.Video.findOne({

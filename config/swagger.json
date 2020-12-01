@@ -94,6 +94,37 @@
                         "format": "date-time"
                     }
                 }
+            },
+            "Video": {
+                "type": "object",
+                "required": [
+                    "title",
+                    "youtubeid"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "youtubeid": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "boolean",
+                        "default": "1"
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updatedAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                }
             }
         },
         "securitySchemes": {
@@ -496,7 +527,7 @@
                                     "$ref": "#components/schemas/Topic"
                                 },
                                 "examples": {
-                                    "User List": [
+                                    "Topics List": [
                                         {
                                             "id": "1",
                                             "topic": "HTML",
@@ -957,7 +988,7 @@
                                     "$ref": "#components/schemas/User"
                                 },
                                 "examples": {
-                                    "User List": [
+                                    "Users List": [
                                         {
                                             "id": "1",
                                             "username": "Daniel",
@@ -1455,6 +1486,464 @@
                                 "examples": {
                                     "Unauthorized": {
                                         "value": "Can't change your own Status"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/wd/videos": {
+            "get": {
+                "tags": [
+                    "Videos"
+                ],
+                "description": "<h2>Get Videos List</h2><br><p>Role required: <strong>Admin</strong></p>",
+                "responses": {
+                    "200": {
+                        "description": "Videos List",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#components/schemas/Video"
+                                },
+                                "examples": {
+                                    "Video List": [
+                                        {
+                                            "id": "1",
+                                            "title": "HTML Crash Course For Absolute Beginners",
+                                            "youtubeid": "UB1O30fR-EE",
+                                            "status": "1"
+                                        },
+                                        {
+                                            "id": "2",
+                                            "topic": "CSS Crash Course For Absolute Beginners",
+                                            "hexcolor": "yfoY53QXEnI",
+                                            "status": "1"
+                                        }
+                                    ]
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Error": {
+                                        "value": "Error"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Unauthorized": {
+                                        "value": "Invalid Token"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Videos"
+                ],
+                "description": "<h2>Create new Video</h2><br><p>Role required: <strong>Admin</strong></p>",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#components/schemas/Video"
+                            },
+                            "examples": {
+                                "Video": {
+                                    "value": {
+                                        "title": "New Video",
+                                        "youtubeid": "UB1O30fR-EE",
+                                        "topics" : [{"id": 32}, {"id": 6}]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "New Video",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#components/schemas/Topic"
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Error": {
+                                        "value": "Error"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Unauthorized": {
+                                        "value": "Invalid Token"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/wd/videos/{id}": {
+            "get": {
+                "tags": [
+                    "Videos"
+                ],
+                "description": "<h2>Get Video Info by Id</h2><br><p>Role required: <strong>Admin</strong></p>",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Video Id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Video Info",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#components/schemas/Video"
+                                },
+                                "examples": {
+                                    "Video": {
+                                        "id": "1",
+                                        "title": "HTML Crash Course For Absolute Beginners",
+                                        "youtubeid": "UB1O30fR-EE",
+                                        "status": "1"
+                                    }
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Error": {
+                                        "value": "Error"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Unauthorized": {
+                                        "value": "Invalid Token"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Videos"
+                ],
+                "description": "<h2>Update Video</h2><br><p>Role required: <strong>Admin</strong></p>",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Video Id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#components/schemas/Video"
+                            },
+                            "examples": {
+                                "Topic": {
+                                    "value": {
+                                        "title": "Updated title",
+                                        "youtubeid": "UB1O30fR-EE",
+                                        "topics" : [{"id": 32}, {"id": 6}]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Updated Video",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#components/schemas/Video"
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Error": {
+                                        "value": "Error"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Unauthorized": {
+                                        "value": "Invalid Token"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Videos"
+                ],
+                "description": "<h2>Delete Video</h2><br><p>Role required: <strong>Super Admin</strong></p>",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Video Id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            },
+                            "examples": {
+                                "Success": {
+                                    "value": "Video Deleted"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Error": {
+                                        "value": "Error"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Unauthorized": {
+                                        "value": "Invalid Token"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/wd/videos/{id}/status": {
+            "put": {
+                "tags": [
+                    "Videos"
+                ],
+                "description": "<h2>Change Video Status</h2><br><p>Role required: <strong>Admin</strong></p>",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Video Id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            },
+                            "examples": {
+                                "Success": {
+                                    "value": "Video Status Active<br>Video Status Inactive"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Error": {
+                                        "value": "Error"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Unauthorized": {
+                                        "value": "Invalid Token"
                                     }
                                 }
                             }

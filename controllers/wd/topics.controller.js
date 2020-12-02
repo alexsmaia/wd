@@ -86,30 +86,6 @@ exports.delete = function(req, res) {
     }).catch(error => {
         res.status(400).json({message:error});
     });
-    return models.Topic.destroy({
-        where : { id : req.params.id }
-    }).then(result => {
-        if (result) {
-            res.status(200).json("Topic Deleted");
-        } else {
-            res.status(400).json("error");
-        }
-    }).catch(error => {
-        res.status(400).json({message:error});
-    });
-}
-exports.delete1 = function(req, res) {
-    return models.Topic.destroy({
-        where : { id : req.params.id }
-    }).then(result => {
-        if (result) {
-            res.status(200).json("Topic Deleted");
-        } else {
-            res.status(400).json("error");
-        }
-    }).catch(error => {
-        res.status(400).json({message:error});
-    });
 }
 
 // Change Topic Satus

@@ -44,6 +44,7 @@ router.put('/:id', [
 })
 // Change Password
 router.put('/:id/password', [
+    param('id').notEmpty().escape(),
     body('password').notEmpty().isLength({ min: 8 }).escape(),
     body('passwordConfirmation').notEmpty().escape().custom((value, { req }) => value == req.body.password),
 ], function (req, res) {

@@ -6,6 +6,7 @@ let {isAdmin} = require('../middleware/isAdmin.js');
 module.exports = (app) => {
     app.use('/', require('../routes/site/auth.routes'));
     app.use('/users', isRegistered, require('../routes/site/users.routes'));
+    app.use('/topics', require('../routes/site/topics.routes'));
     app.use('/wd/topics', isAdmin, require('../routes/wd/topics.routes'));
     app.use('/wd/users', isAdmin, require('../routes/wd/users.routes'));
     app.use('/wd/videos', isAdmin, require('../routes/wd/videos.routes'));

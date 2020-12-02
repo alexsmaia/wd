@@ -264,6 +264,122 @@
                 }
             }
         },
+        "/topics": {
+            "get": {
+                "tags": [
+                    "Topics"
+                ],
+                "description": "<h2>Get Active Topics List</h2>",
+                "responses": {
+                    "200": {
+                        "description": "Topics List",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#components/schemas/Topic"
+                                },
+                                "examples": {
+                                    "Topics List": [
+                                        {
+                                            "id": "1",
+                                            "topic": "HTML",
+                                            "description": "Crie a estrutura de um Site",
+                                            "hexcolor": "#6495ED"
+                                        },
+                                        {
+                                            "id": "2",
+                                            "topic": "CSS",
+                                            "description": "Altere a aparência de um Site",
+                                            "hexcolor": "#C0392B"
+                                        }
+                                    ]
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Error": {
+                                        "value": "Error"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/topics/{id}": {
+            "get": {
+                "tags": [
+                    "Topics"
+                ],
+                "description": "<h2>Get Topic Info by Id</h2><br><p>Return the selected Topic with all associated Videos.</p>",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Topic Id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Topic Info",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#components/schemas/Topic"
+                                },
+                                "examples": {
+                                    "Topic": {
+                                        "id": "1",
+                                        "Topic": "HTML",
+                                        "email": "Crie a estrutura de um Site",
+                                        "hexcolor": "#6495ED",
+                                        "status": "1"
+                                    }
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Error": {
+                                        "value": "Error"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/users/{id}": {
             "put": {
                 "tags": [

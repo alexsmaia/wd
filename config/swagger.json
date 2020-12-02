@@ -280,18 +280,18 @@
                                 },
                                 "examples": {
                                     "Topics List": [
-                                        {
-                                            "id": "1",
-                                            "topic": "HTML",
-                                            "description": "Crie a estrutura de um Site",
-                                            "hexcolor": "#6495ED"
-                                        },
-                                        {
-                                            "id": "2",
-                                            "topic": "CSS",
-                                            "description": "Altere a aparência de um Site",
-                                            "hexcolor": "#C0392B"
-                                        }
+                                        [
+                                            {
+                                              "id": 1,
+                                              "topic": "HTML",
+                                              "description": "Crie a estrutura de um Site"
+                                            },
+                                            {
+                                              "id": 3,
+                                              "topic": "CSS",
+                                              "description": "Altere a aparência de um Site"
+                                            }
+                                        ]
                                     ]
                                 }
                             },
@@ -347,11 +347,93 @@
                                 },
                                 "examples": {
                                     "Topic": {
-                                        "id": "1",
-                                        "Topic": "HTML",
-                                        "email": "Crie a estrutura de um Site",
-                                        "hexcolor": "#6495ED",
-                                        "status": "1"
+                                        "id": 3,
+                                        "topic": "CSS",
+                                        "description": "Altere a aparência de um Site",
+                                        "Videos": [
+                                            {
+                                                "id": 4,
+                                                "title": "teste title 4",
+                                                "youtubeid": "testeyoutubeid 4",
+                                                "TopicVideo": {
+                                                    "createdAt": "2020-12-01T16:53:36.000Z",
+                                                    "updatedAt": "2020-12-01T16:53:36.000Z",
+                                                    "TopicId": 3,
+                                                    "VideoId": 4
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Error": {
+                                        "value": "Error"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/videos/{id}": {
+            "get": {
+                "tags": [
+                    "Videos"
+                ],
+                "description": "<h2>Get Video Info by Id</h2><br><p>Return the selected Video with all associated Topics.</p></p>Return empty if no active Topic associated</p>",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Video Id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Topic Info",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#components/schemas/Video"
+                                },
+                                "examples": {
+                                    "Video": {
+                                        "id": 4,
+                                        "title": "teste title 4",
+                                        "youtubeid": "testeyoutubeid 4",
+                                        "Topics": [
+                                            {
+                                                "id": 3,
+                                                "topic": "CSS",
+                                                "description": "Altere a aparência de um Site",
+                                                "TopicVideo": {
+                                                    "createdAt": "2020-12-01T16:53:36.000Z",
+                                                    "updatedAt": "2020-12-01T16:53:36.000Z",
+                                                    "TopicId": 3,
+                                                    "VideoId": 4
+                                                }
+                                            }
+                                        ]
                                     }
                                 }
                             },

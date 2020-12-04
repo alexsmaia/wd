@@ -41,6 +41,10 @@ exports.getLogedUser = (authorization, callback) => {
 exports.getLogedId = (authorization, callback) => {    
     // get the decoded payload ignoring signature
     let decoded = jwt.decode(authorization.replace('Bearer ', ''));
-    let user_id = decoded.data.user_id;
-    return callback(user_id);
+    let logedId = decoded.data.user_id;
+    if (logedId > 0) {
+        return callback(logedId);
+    } else {
+        return callback(false);
+    }
 }

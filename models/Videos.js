@@ -18,6 +18,7 @@ module.exports = (sequelize, DataTypes) => {
     
     Video.associate = function(models) {
         Video.belongsToMany(models.Topic, {through: 'TopicVideo'});
+        Video.hasMany(models.Favorite)
     };
 
     return Video;

@@ -19,7 +19,36 @@
     ],
     "components": {
         "schemas": {
-            "Topic": {
+            "Favorites": {
+                "type": "object",
+                "required": [
+                    "userId",
+                    "videoId"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "userId": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "videoId": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updatedAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                }
+            },
+            "Topics": {
                 "type": "object",
                 "required": [
                     "topic",
@@ -54,7 +83,7 @@
                     }
                 }
             },
-            "User": {
+            "Users": {
                 "type": "object",
                 "required": [
                     "username",
@@ -95,7 +124,7 @@
                     }
                 }
             },
-            "Video": {
+            "Videos": {
                 "type": "object",
                 "required": [
                     "title",
@@ -138,16 +167,12 @@
     "paths": {
         "/login": {
             "post": {
-                "description": "Login",
-                "tags": [
-                    "Auth"
-                ],
+                "description": "<h2>Login</h2>",
+                "tags": [ "Auth" ],
                 "requestBody": {
                     "content": {
                         "application/json": {
-                            "schema": {
-                                "$ref": "#components/schemas/User"
-                            },
+                            "schema": { "$ref": "#components/schemas/Users" },
                             "examples": {
                                 "Registered": {
                                     "value": {
@@ -207,16 +232,12 @@
         },
         "/register": {
             "post": {
-                "description": "Register",
-                "tags": [
-                    "Auth"
-                ],
+                "description": "<h2>Register</h2>",
+                "tags": [ "Auth" ],
                 "requestBody": {
                     "content": {
                         "application/json": {
-                            "schema": {
-                                "$ref": "#components/schemas/User"
-                            },
+                            "schema": { "$ref": "#components/schemas/Users" },
                             "examples": {
                                 "User": {
                                     "value": {
@@ -264,6 +285,680 @@
                 }
             }
         },
+        "/favorites": {
+            "get": {
+                "tags": [ "Favorites" ],
+                "description": "<h2>Get User Favorites active Videos List</h2><br><p>Role required: <strong>Register</strong></p>",
+                "responses": {
+                    "200": {
+                        "description": "Favorite Videos List",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#components/schemas/Favorites" },
+                                "examples": {
+                                    "Videos List": [
+                                        [
+                                            {
+                                              "id": 1,
+                                              "topic": "HTML",
+                                              "description": "Crie a estrutura de um Site"
+                                            },
+                                            {
+                                              "id": 3,
+                                              "topic": "CSS",
+                                              "description": "Altere a aparência de um Site"
+                                            }
+                                        ]
+                                    ]
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Error": {
+                                        "value": "Error"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Unauthorized": {
+                                        "value": "Invalid Token"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [ { "bearer": [] } ]
+            }
+        },
+        "/favorites/{videoId}": {
+            "get": {
+                "tags": [ "Favorites" ],
+                "description": "<h2>Add/Remove Video from User Favorites</h2><br><p>Role required: <strong>Register</strong></p>",
+                "parameters": [
+                    {
+                        "name": "videoId",
+                        "in": "path",
+                        "description": "Video Id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            },
+                            "examples": {
+                                "Add Favorite": {
+                                    "value": "Video added to Favorites"
+                                },
+                                "Remove Favorite": {
+                                    "value": "Video removed from Favorites"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Error": {
+                                        "value": "Error"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Unauthorized": {
+                                        "value": "Invalid Token"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [ { "bearer": [] } ]
+            }
+        },
+        "/wd/favorites": {
+            "get": {
+                "tags": [ "Favorites" ],
+                "description": "<h2>Get Favorites List</h2><br><p>Role required: <strong>Admin</strong></p>",
+                "responses": {
+                    "200": {
+                        "description": "Favorites List",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#components/schemas/Favorites" },
+                                "examples": {
+                                    "Favorite List": 
+                                    [
+                                        {
+                                            "id": 2,
+                                            "userId": 3,
+                                            "videoId": 1,
+                                            "createdAt": "2020-12-02T17:42:16.000Z",
+                                            "updatedAt": "2020-12-02T17:42:16.000Z"
+                                        },
+                                        {
+                                            "id": 4,
+                                            "userId": 3,
+                                            "videoId": 2,
+                                            "createdAt": "2020-12-04T08:33:54.000Z",
+                                            "updatedAt": "2020-12-04T08:33:54.000Z"
+                                          }
+                                    ]
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Error": {
+                                        "value": "Error"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Unauthorized": {
+                                        "value": "Invalid Token"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [ { "bearer": [] } ]
+            },
+            "post": {
+                "tags": [ "Favorites" ],
+                "description": "<h2>Create new Favorite</h2><br><p>Role required: <strong>Admin</strong></p>",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": { "$ref": "#components/schemas/Favorites" },
+                            "examples": {
+                                "Favorite": {
+                                    "value": {
+                                        "userId": 1,
+                                        "videoId": 1
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "New Favorite",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#components/schemas/Favorites" }
+                            },
+                            "text/plain": {
+                                "schema": { "type": "string" }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": { "type": "string" },
+                                "examples": {
+                                    "Error": { "value": "Error" }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": { "type": "string" },
+                                "examples": {
+                                    "Unauthorized": {
+                                        "value": "Invalid Token"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [ { "bearer": [] } ]
+            }
+        },
+        "/wd/favorites/relations": {
+            "get": {
+                "tags": [ "Favorites" ],
+                "description": "<h2>Get Favorites List with related items</h2><br><p>Related:</p><p>-> User;</p><p>-> Video</p><br><p>Role required: <strong>Admin</strong></p>",
+                "responses": {
+                    "200": {
+                        "description": "Favorites List with Relations",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#components/schemas/Favorites" },
+                                "examples": {
+                                    "Favorite List ": [
+                                        {
+                                            "id": 4,
+                                            "userId": 3,
+                                            "videoId": 2,
+                                            "createdAt": "2020-12-04T08:33:54.000Z",
+                                            "updatedAt": "2020-12-04T08:33:54.000Z",
+                                            "Video": {
+                                                "id": 2,
+                                                "title": "teste title 2",
+                                                "youtubeid": "testeyoutubeid 2",
+                                                "status": true,
+                                                "createdAt": "2020-12-01T16:14:47.000Z",
+                                                "updatedAt": "2020-12-01T16:14:47.000Z"
+                                            },
+                                            "User": {
+                                                "id": 3,
+                                                "username": "registered",
+                                                "email": "registered@mail.pt",
+                                                "password": "$2b$10$yUhKHY3B/lgSEiZjVpz/4OtRxXwY40HtEaW8kCqsdvizMwGgKp9oi",
+                                                "status": true,
+                                                "role_id": 1,
+                                                "createdAt": "2020-11-28T23:43:35.000Z",
+                                                "updatedAt": "2020-12-01T09:39:59.000Z"
+                                            }
+                                        },
+                                        {
+                                            "id": 6,
+                                            "userId": 3,
+                                            "videoId": 3,
+                                            "createdAt": "2020-12-04T16:23:50.000Z",
+                                            "updatedAt": "2020-12-04T16:23:50.000Z",
+                                            "Video": {
+                                                "id": 3,
+                                                "title": "teste title 3",
+                                                "youtubeid": "testeyoutubeid 3",
+                                                "status": true,
+                                                "createdAt": "2020-12-01T16:51:13.000Z",
+                                                "updatedAt": "2020-12-01T16:51:13.000Z"
+                                            },
+                                            "User": {
+                                                "id": 3,
+                                                "username": "registered",
+                                                "email": "registered@mail.pt",
+                                                "password": "$2b$10$yUhKHY3B/lgSEiZjVpz/4OtRxXwY40HtEaW8kCqsdvizMwGgKp9oi",
+                                                "status": true,
+                                                "role_id": 1,
+                                                "createdAt": "2020-11-28T23:43:35.000Z",
+                                                "updatedAt": "2020-12-01T09:39:59.000Z"
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Error": {
+                                        "value": "Error"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Unauthorized": {
+                                        "value": "Invalid Token"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [ { "bearer": [] } ]
+            }
+        },
+        "/wd/favorites/{id}": {
+            "get": {
+                "tags": [ "Favorites" ],
+                "description": "<h2>Get Favorite Info by Id</h2><br><p>Role required <strong>Admin</strong></p>",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Favorite Id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Favorite Info",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#components/schemas/Favorites" },
+                                "examples": {
+                                    "Favorite": {
+                                        "id": 2,
+                                        "userId": 3,
+                                        "videoId": 1,
+                                        "createdAt": "2020-12-02T17:42:16.000Z",
+                                        "updatedAt": "2020-12-02T17:42:16.000Z"
+                                    }
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Error": {
+                                        "value": "Error"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Unauthorized": {
+                                        "value": "Invalid Token"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [ { "bearer": [] } ]
+            },
+            "put": {
+                "tags": [ "Favorites" ],
+                "description": "<h2>Update Favorite</h2><br><p>Role required: <strong>Admin</strong></p>",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Favorite Id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": { "$ref": "#components/schemas/Favorites" },
+                            "examples": {
+                                "Topic": {
+                                    "value": {
+                                        "topic": "Updated Topic",
+                                        "description": "Updated Topic description",
+                                        "hexcolor": "#F1C40F"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Updated Topic",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#components/schemas/Topics" }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Error": { 
+                                        "value": "Error" 
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Unauthorized": {
+                                        "value": "Invalid Token"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [ { "bearer": [] } ]
+            },
+            "delete": {
+                "tags": [
+                    "Favorites"
+                ],
+                "description": "<h2>Delete Favorite</h2><br><p>Role required: <strong>Super Admin</strong></p>",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Favorite Id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            },
+                            "examples": {
+                                "Success": {
+                                    "value": "Favorite Deleted"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Error": {
+                                        "value": "Error"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Unauthorized": {
+                                        "value": "Invalid Token"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [ { "bearer": [] } ]
+            }
+        },
+        "/wd/favorites/{id}/relations": {
+            "get": {
+                "tags": [ "Favorites" ],
+                "description": "<h2>Get Favorite Info by Id with relations</h2><br><p>Related:</p><p>-> User;</p><p>-> Video</p><br><p>Role required <strong>Admin</strong></p>",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Favorite Id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Favorite Info with relations",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#components/schemas/Favorites" },
+                                "examples": {
+                                    "Favorite": {
+                                        "id": 4,
+                                        "userId": 3,
+                                        "videoId": 2,
+                                        "createdAt": "2020-12-04T08:33:54.000Z",
+                                        "updatedAt": "2020-12-04T08:33:54.000Z",
+                                        "Video": {
+                                            "id": 2,
+                                            "title": "teste title 2",
+                                            "youtubeid": "testeyoutubeid 2",
+                                            "status": true,
+                                            "createdAt": "2020-12-01T16:14:47.000Z",
+                                            "updatedAt": "2020-12-01T16:14:47.000Z"
+                                        },
+                                        "User": {
+                                            "id": 3,
+                                            "username": "registered",
+                                            "email": "registered@mail.pt",
+                                            "password": "$2b$10$yUhKHY3B/lgSEiZjVpz/4OtRxXwY40HtEaW8kCqsdvizMwGgKp9oi",
+                                            "status": true,
+                                            "role_id": 1,
+                                            "createdAt": "2020-11-28T23:43:35.000Z",
+                                            "updatedAt": "2020-12-01T09:39:59.000Z"
+                                        }
+                                    }
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Error": {
+                                        "value": "Error"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Unauthorized": {
+                                        "value": "Invalid Token"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [ { "bearer": [] } ]
+            }
+        },
         "/topics": {
             "get": {
                 "tags": [
@@ -275,9 +970,7 @@
                         "description": "Topics List",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "$ref": "#components/schemas/Topic"
-                                },
+                                "schema": { "$ref": "#components/schemas/Topics" },
                                 "examples": {
                                     "Topics List": [
                                         [
@@ -342,9 +1035,7 @@
                         "description": "Topic Info",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "$ref": "#components/schemas/Topic"
-                                },
+                                "schema": { "$ref": "#components/schemas/Topics" },
                                 "examples": {
                                     "Topic": {
                                         "id": 3,
@@ -391,325 +1082,6 @@
                 }
             }
         },
-        "/videos/{id}": {
-            "get": {
-                "tags": [
-                    "Videos"
-                ],
-                "description": "<h2>Get Video Info by Id</h2><br><p>Return the selected Video with all associated Topics.</p></p>Return empty if no active Topic associated</p>",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "Video Id",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Topic Info",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#components/schemas/Video"
-                                },
-                                "examples": {
-                                    "Video": {
-                                        "id": 4,
-                                        "title": "teste title 4",
-                                        "youtubeid": "testeyoutubeid 4",
-                                        "Topics": [
-                                            {
-                                                "id": 3,
-                                                "topic": "CSS",
-                                                "description": "Altere a aparência de um Site",
-                                                "TopicVideo": {
-                                                    "createdAt": "2020-12-01T16:53:36.000Z",
-                                                    "updatedAt": "2020-12-01T16:53:36.000Z",
-                                                    "TopicId": 3,
-                                                    "VideoId": 4
-                                                }
-                                            }
-                                        ]
-                                    }
-                                }
-                            },
-                            "text/plain": {
-                                "schema": {
-                                    "type": "string"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Error",
-                        "content": {
-                            "text/plain": {
-                                "schema": {
-                                    "type": "string"
-                                },
-                                "examples": {
-                                    "Error": {
-                                        "value": "Error"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/users/{id}": {
-            "put": {
-                "tags": [
-                    "Users"
-                ],
-                "description": "<h2>Update User</h2><br><p>Register Users can update her own info</p><p>Admin Users can update Register Users info and her own.</p><p>Super Admin can update all Users</p><br><p>Role required: <strong>Register</strong>",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "User Id",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#components/schemas/User"
-                            },
-                            "examples": {
-                                "User": {
-                                    "value": {
-                                        "username": "userupdate",
-                                        "email": "userupdate@mail.pt"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "text/plain": {
-                                "schema": {
-                                    "type": "string"
-                                }
-                            },
-                            "examples": {
-                                "Success": {
-                                    "value": "User Updated"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Error",
-                        "content": {
-                            "text/plain": {
-                                "schema": {
-                                    "type": "string"
-                                },
-                                "examples": {
-                                    "Error": {
-                                        "value": "Error"
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Error",
-                        "content": {
-                            "text/plain": {
-                                "schema": {
-                                    "type": "string"
-                                },
-                                "examples": {
-                                    "Unauthorized": {
-                                        "value": "Invalid Token"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearer": []
-                    }
-                ]
-            }
-        },
-        "/users/profile": {
-            "get": {
-                "tags": [
-                    "Users"
-                ],
-                "description": "<h2>User Profile</h2><br><p>Only can access own Profile</p><br><p>Role required: <strong>Register</strong>",
-                "responses": {
-                    "200": {
-                        "description": "User Info",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#components/schemas/User"
-                                },
-                                "examples": {
-                                    "User": {
-                                        "id": "1",
-                                        "username": "Daniel",
-                                        "email": "daniel@mail.pt",
-                                        "password": "$2b$10$WdJlO4C.6ZUnOkqVY996Ye8esJPvSMFRuPZzg4udDFZqjSEWv8L3G",
-                                        "status": "1",
-                                        "role_id": "1",
-                                        "createdAt": "2020-11-27T10:55:33.000Z",
-                                        "updatedAt": "2020-11-30T22:41:53.000Z"
-                                    }
-                                }
-                            },
-                            "text/plain": {
-                                "schema": {
-                                    "type": "string"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Error",
-                        "content": {
-                            "text/plain": {
-                                "schema": {
-                                    "type": "string"
-                                },
-                                "examples": {
-                                    "Error": {
-                                        "value": "Error"
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Error",
-                        "content": {
-                            "text/plain": {
-                                "schema": {
-                                    "type": "string"
-                                },
-                                "examples": {
-                                    "Unauthorized": {
-                                        "value": "Invalid Token"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearer": []
-                    }
-                ]
-            }
-        },
-        "/users/{id}/password": {
-            "put": {
-                "tags": [
-                    "Users"
-                ],
-                "description": "<h2>Change User Password</h2><br><p>Users can change their own passowrds or Super Admin can change any password.</p><p>Role required: <strong>Register</strong></p>",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "User Id",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#components/schemas/User"
-                            },
-                            "examples": {
-                                "User": {
-                                    "value": {
-                                        "password": "12345678",
-                                        "passwordConfirmation": "12345678"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "text/plain": {
-                                "schema": {
-                                    "type": "string"
-                                }
-                            },
-                            "examples": {
-                                "Success": {
-                                    "value": "Password Changed"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Error",
-                        "content": {
-                            "text/plain": {
-                                "schema": {
-                                    "type": "string"
-                                },
-                                "examples": {
-                                    "Error": {
-                                        "value": "Error"
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Error",
-                        "content": {
-                            "text/plain": {
-                                "schema": {
-                                    "type": "string"
-                                },
-                                "examples": {
-                                    "Unauthorized": {
-                                        "value": "Invalid Token"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearer": []
-                    }
-                ]
-            }
-        },
         "/wd/topics": {
             "get": {
                 "tags": [
@@ -721,9 +1093,7 @@
                         "description": "Topics List",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "$ref": "#components/schemas/Topic"
-                                },
+                                "schema": { "$ref": "#components/schemas/Topics" },
                                 "examples": {
                                     "Topics List": [
                                         {
@@ -781,11 +1151,7 @@
                         }
                     }
                 },
-                "security": [
-                    {
-                        "bearer": []
-                    }
-                ]
+                "security": [ { "bearer": [] } ]
             },
             "post": {
                 "tags": [
@@ -795,9 +1161,7 @@
                 "requestBody": {
                     "content": {
                         "application/json": {
-                            "schema": {
-                                "$ref": "#components/schemas/Topic"
-                            },
+                            "schema": { "$ref": "#components/schemas/Topics" },
                             "examples": {
                                 "Topic": {
                                     "value": {
@@ -815,9 +1179,7 @@
                         "description": "New Topic",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "$ref": "#components/schemas/Topic"
-                                }
+                                "schema": { "$ref": "#components/schemas/Topics" }
                             },
                             "text/plain": {
                                 "schema": {
@@ -857,11 +1219,7 @@
                         }
                     }
                 },
-                "security": [
-                    {
-                        "bearer": []
-                    }
-                ]
+                "security": [ { "bearer": [] } ]
             }
         },
         "/wd/topics/{id}": {
@@ -886,9 +1244,7 @@
                         "description": "Topic Info",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "$ref": "#components/schemas/Topic"
-                                },
+                                "schema": { "$ref": "#components/schemas/Topics" },
                                 "examples": {
                                     "Topic": {
                                         "id": "1",
@@ -937,11 +1293,7 @@
                         }
                     }
                 },
-                "security": [
-                    {
-                        "bearer": []
-                    }
-                ]
+                "security": [ { "bearer": [] } ]
             },
             "put": {
                 "tags": [
@@ -962,9 +1314,7 @@
                 "requestBody": {
                     "content": {
                         "application/json": {
-                            "schema": {
-                                "$ref": "#components/schemas/Topic"
-                            },
+                            "schema": { "$ref": "#components/schemas/Topics" },
                             "examples": {
                                 "Topic": {
                                     "value": {
@@ -982,9 +1332,7 @@
                         "description": "Updated Topic",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "$ref": "#components/schemas/Topic"
-                                }
+                                "schema": { "$ref": "#components/schemas/Topics" }
                             },
                             "text/plain": {
                                 "schema": {
@@ -1024,11 +1372,7 @@
                         }
                     }
                 },
-                "security": [
-                    {
-                        "bearer": []
-                    }
-                ]
+                "security": [ { "bearer": [] } ]
             },
             "delete": {
                 "tags": [
@@ -1108,11 +1452,7 @@
                         }
                     }
                 },
-                "security": [
-                    {
-                        "bearer": []
-                    }
-                ]
+                "security": [ { "bearer": [] } ]
             }
         },
         "/wd/topics/{id}/status": {
@@ -1179,175 +1519,15 @@
                         }
                     }
                 },
-                "security": [
-                    {
-                        "bearer": []
-                    }
-                ]
+                "security": [ { "bearer": [] } ]
             }
         },
-        "/wd/users": {
-            "get": {
-                "tags": [
-                    "Users"
-                ],
-                "description": "Get Users List<br>Role required Admin",
-                "responses": {
-                    "200": {
-                        "description": "Users List",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#components/schemas/User"
-                                },
-                                "examples": {
-                                    "Users List": [
-                                        {
-                                            "id": "1",
-                                            "username": "Daniel",
-                                            "email": "daniel@mail.pt",
-                                            "status": "1",
-                                            "role_id": "1"
-                                        },
-                                        {
-                                            "id": "2",
-                                            "username": "Joaquim",
-                                            "email": "joaquim@mail.pt",
-                                            "status": "1",
-                                            "role_id": "1"
-                                        }
-                                    ]
-                                }
-                            },
-                            "text/plain": {
-                                "schema": {
-                                    "type": "string"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Error",
-                        "content": {
-                            "text/plain": {
-                                "schema": {
-                                    "type": "string"
-                                },
-                                "examples": {
-                                    "Error": {
-                                        "value": "Error"
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Error",
-                        "content": {
-                            "text/plain": {
-                                "schema": {
-                                    "type": "string"
-                                },
-                                "examples": {
-                                    "Unauthorized": {
-                                        "value": "Invalid Token"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearer": []
-                    }
-                ]
-            }
-        },
-        "/wd/users/{id}": {
-            "get": {
-                "tags": [
-                    "Users"
-                ],
-                "description": "Get User Info by Id<br>Role required Admin",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "User Id",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "User Info",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#components/schemas/User"
-                                },
-                                "examples": {
-                                    "User": {
-                                        "id": "1",
-                                        "username": "Daniel",
-                                        "email": "daniel@mail.pt",
-                                        "status": "1",
-                                        "role_id": "1"
-                                    }
-                                }
-                            },
-                            "text/plain": {
-                                "schema": {
-                                    "type": "string"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Error",
-                        "content": {
-                            "text/plain": {
-                                "schema": {
-                                    "type": "string"
-                                },
-                                "examples": {
-                                    "Error": {
-                                        "value": "Error"
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Error",
-                        "content": {
-                            "text/plain": {
-                                "schema": {
-                                    "type": "string"
-                                },
-                                "examples": {
-                                    "Unauthorized": {
-                                        "value": "Invalid Token"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearer": []
-                    }
-                ]
-            },
+        "/users/{id}": {
             "put": {
                 "tags": [
                     "Users"
                 ],
-                "description": "<h2>Update User</h2><br><p>Only Super Admin can update data from other Super Admin</p><p>Role required: <strong>Admin</strong>",
+                "description": "<h2>Update User</h2><br><p>Register Users can update her own info</p><p>Admin Users can update Register Users info and her own.</p><p>Super Admin can update all Users</p><br><p>Role required: <strong>Register</strong>",
                 "parameters": [
                     {
                         "name": "id",
@@ -1362,9 +1542,7 @@
                 "requestBody": {
                     "content": {
                         "application/json": {
-                            "schema": {
-                                "$ref": "#components/schemas/User"
-                            },
+                            "schema": { "$ref": "#components/schemas/Users" },
                             "examples": {
                                 "User": {
                                     "value": {
@@ -1423,11 +1601,379 @@
                         }
                     }
                 },
-                "security": [
-                    {
-                        "bearer": []
+                "security": [ { "bearer": [] } ]
+            }
+        },
+        "/users/profile": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "description": "<h2>User Profile</h2><br><p>Only can access own Profile</p><br><p>Role required: <strong>Register</strong>",
+                "responses": {
+                    "200": {
+                        "description": "User Info",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#components/schemas/Users" },
+                                "examples": {
+                                    "User": {
+                                        "id": "1",
+                                        "username": "Daniel",
+                                        "email": "daniel@mail.pt",
+                                        "password": "$2b$10$WdJlO4C.6ZUnOkqVY996Ye8esJPvSMFRuPZzg4udDFZqjSEWv8L3G",
+                                        "status": "1",
+                                        "role_id": "1",
+                                        "createdAt": "2020-11-27T10:55:33.000Z",
+                                        "updatedAt": "2020-11-30T22:41:53.000Z"
+                                    }
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Error": {
+                                        "value": "Error"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Unauthorized": {
+                                        "value": "Invalid Token"
+                                    }
+                                }
+                            }
+                        }
                     }
-                ]
+                },
+                "security": [ { "bearer": [] } ]
+            }
+        },
+        "/users/{id}/password": {
+            "put": {
+                "tags": [
+                    "Users"
+                ],
+                "description": "<h2>Change User Password</h2><br><p>Users can change their own passowrds or Super Admin can change any password.</p><p>Role required: <strong>Register</strong></p>",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "User Id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": { "$ref": "#components/schemas/Users" },
+                            "examples": {
+                                "User": {
+                                    "value": {
+                                        "password": "12345678",
+                                        "passwordConfirmation": "12345678"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            },
+                            "examples": {
+                                "Success": {
+                                    "value": "Password Changed"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Error": {
+                                        "value": "Error"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Unauthorized": {
+                                        "value": "Invalid Token"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [ { "bearer": [] } ]
+            }
+        },
+        "/wd/users": {
+            "get": {
+                "tags": [ "Users" ],
+                "description": "<h2>Get Users List<h2><br><p>Role required: <strong>Admin</strong>",
+                "responses": {
+                    "200": {
+                        "description": "Users List",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#components/schemas/Users" },
+                                "examples": {
+                                    "Users List": [
+                                        {
+                                            "id": "1",
+                                            "username": "Daniel",
+                                            "email": "daniel@mail.pt",
+                                            "status": "1",
+                                            "role_id": "1"
+                                        },
+                                        {
+                                            "id": "2",
+                                            "username": "Joaquim",
+                                            "email": "joaquim@mail.pt",
+                                            "status": "1",
+                                            "role_id": "1"
+                                        }
+                                    ]
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Error": {
+                                        "value": "Error"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Unauthorized": {
+                                        "value": "Invalid Token"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [ { "bearer": [] } ]
+            }
+        },
+        "/wd/users/{id}": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "description": "Get User Info by Id<br>Role required Admin",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "User Id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User Info",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#components/schemas/Users" },
+                                "examples": {
+                                    "User": {
+                                        "id": "1",
+                                        "username": "Daniel",
+                                        "email": "daniel@mail.pt",
+                                        "status": "1",
+                                        "role_id": "1"
+                                    }
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Error": {
+                                        "value": "Error"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Unauthorized": {
+                                        "value": "Invalid Token"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [ { "bearer": [] } ]
+            },
+            "put": {
+                "tags": [
+                    "Users"
+                ],
+                "description": "<h2>Update User</h2><br><p>Only Super Admin can update data from other Super Admin</p><p>Role required: <strong>Admin</strong>",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "User Id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": { "$ref": "#components/schemas/Users" },
+                            "examples": {
+                                "User": {
+                                    "value": {
+                                        "username": "userupdate",
+                                        "email": "userupdate@mail.pt"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            },
+                            "examples": {
+                                "Success": {
+                                    "value": "User Updated"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Error": {
+                                        "value": "Error"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Unauthorized": {
+                                        "value": "Invalid Token"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [ { "bearer": [] } ]
             },
             "delete": {
                 "tags": [
@@ -1507,11 +2053,7 @@
                         }
                     }
                 },
-                "security": [
-                    {
-                        "bearer": []
-                    }
-                ]
+                "security": [ { "bearer": [] } ]
             }
         },
         "/wd/users/{id}/role": {
@@ -1534,9 +2076,7 @@
                 "requestBody": {
                     "content": {
                         "application/json": {
-                            "schema": {
-                                "$ref": "#components/schemas/User"
-                            },
+                            "schema": { "$ref": "#components/schemas/Users" },
                             "examples": {
                                 "Register": {
                                     "value": {
@@ -1619,11 +2159,7 @@
                         }
                     }
                 },
-                "security": [
-                    {
-                        "bearer": []
-                    }
-                ]
+                "security": [ { "bearer": [] } ]
             }
         },
         "/wd/users/{id}/status": {
@@ -1705,11 +2241,76 @@
                         }
                     }
                 },
-                "security": [
+                "security": [ { "bearer": [] } ]
+            }
+        },
+        "/videos/{id}": {
+            "get": {
+                "tags": [
+                    "Videos"
+                ],
+                "description": "<h2>Get Video Info by Id</h2><br><p>Return the selected Video with all associated Topics.</p></p>Return empty if no active Topic associated</p>",
+                "parameters": [
                     {
-                        "bearer": []
+                        "name": "id",
+                        "in": "path",
+                        "description": "Video Id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
                     }
-                ]
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Topic Info",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#components/schemas/Videos" },
+                                "examples": {
+                                    "Video": {
+                                        "id": 4,
+                                        "title": "teste title 4",
+                                        "youtubeid": "testeyoutubeid 4",
+                                        "Topics": [
+                                            {
+                                                "id": 3,
+                                                "topic": "CSS",
+                                                "description": "Altere a aparência de um Site",
+                                                "TopicVideo": {
+                                                    "createdAt": "2020-12-01T16:53:36.000Z",
+                                                    "updatedAt": "2020-12-01T16:53:36.000Z",
+                                                    "TopicId": 3,
+                                                    "VideoId": 4
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Error": {
+                                        "value": "Error"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         },
         "/wd/videos": {
@@ -1723,9 +2324,7 @@
                         "description": "Videos List",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "$ref": "#components/schemas/Video"
-                                },
+                                "schema": { "$ref": "#components/schemas/Videos" },
                                 "examples": {
                                     "Video List": [
                                         {
@@ -1781,11 +2380,7 @@
                         }
                     }
                 },
-                "security": [
-                    {
-                        "bearer": []
-                    }
-                ]
+                "security": [ { "bearer": [] } ]
             },
             "post": {
                 "tags": [
@@ -1795,9 +2390,7 @@
                 "requestBody": {
                     "content": {
                         "application/json": {
-                            "schema": {
-                                "$ref": "#components/schemas/Video"
-                            },
+                            "schema": { "$ref": "#components/schemas/Videos" },
                             "examples": {
                                 "Video": {
                                     "value": {
@@ -1815,9 +2408,7 @@
                         "description": "New Video",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "$ref": "#components/schemas/Topic"
-                                }
+                                "schema": { "$ref": "#components/schemas/Topics" }
                             },
                             "text/plain": {
                                 "schema": {
@@ -1857,11 +2448,7 @@
                         }
                     }
                 },
-                "security": [
-                    {
-                        "bearer": []
-                    }
-                ]
+                "security": [ { "bearer": [] } ]
             }
         },
         "/wd/videos/{id}": {
@@ -1886,9 +2473,7 @@
                         "description": "Video Info",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "$ref": "#components/schemas/Video"
-                                },
+                                "schema": { "$ref": "#components/schemas/Videos" },
                                 "examples": {
                                     "Video": {
                                         "id": "1",
@@ -1936,16 +2521,10 @@
                         }
                     }
                 },
-                "security": [
-                    {
-                        "bearer": []
-                    }
-                ]
+                "security": [ { "bearer": [] } ]
             },
             "put": {
-                "tags": [
-                    "Videos"
-                ],
+                "tags": [ "Videos" ],
                 "description": "<h2>Update Video</h2><br><p>Role required: <strong>Admin</strong></p>",
                 "parameters": [
                     {
@@ -1961,9 +2540,7 @@
                 "requestBody": {
                     "content": {
                         "application/json": {
-                            "schema": {
-                                "$ref": "#components/schemas/Video"
-                            },
+                            "schema": { "$ref": "#components/schemas/Videos" },
                             "examples": {
                                 "Topic": {
                                     "value": {
@@ -1981,9 +2558,7 @@
                         "description": "Updated Video",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "$ref": "#components/schemas/Video"
-                                }
+                                "schema": { "$ref": "#components/schemas/Videos" }
                             },
                             "text/plain": {
                                 "schema": {
@@ -2023,11 +2598,7 @@
                         }
                     }
                 },
-                "security": [
-                    {
-                        "bearer": []
-                    }
-                ]
+                "security": [ { "bearer": [] } ]
             },
             "delete": {
                 "tags": [
@@ -2092,11 +2663,7 @@
                         }
                     }
                 },
-                "security": [
-                    {
-                        "bearer": []
-                    }
-                ]
+                "security": [ { "bearer": [] } ]
             }
         },
         "/wd/videos/{id}/status": {
@@ -2163,11 +2730,7 @@
                         }
                     }
                 },
-                "security": [
-                    {
-                        "bearer": []
-                    }
-                ]
+                "security": [ { "bearer": [] } ]
             }
         }
     }

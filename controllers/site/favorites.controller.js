@@ -19,7 +19,7 @@ exports.listAllActive = function(req, res) {
                 res.status(400).json({message:error});
             });
         } else {
-            res.status(400).json("Error2");
+            res.status(400).json("Error");
         }
     })
 }

@@ -54,7 +54,7 @@ router.post('/', [
                 return Promise.reject('Video Id not valid');
             }
         })
-    }), 
+    }),
     body('userId').notEmpty().isNumeric().escape().custom(value => {
         return models.User.findOne({
             where: { id: value }

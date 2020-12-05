@@ -17,6 +17,11 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             defaultValue: 0,
         },
+        archived: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            defaultValue: 0,
+        },
     });
     
     Comment.associate = function(models) {

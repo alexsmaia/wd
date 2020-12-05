@@ -3,6 +3,8 @@ const models = require('../../models');
 
 // Get Items List
 exports.listAll = function(req, res) {
+    res.status(400).json("logedId");
+
     return models.Comment.findAll().then (items => {
         res.status(200).json(items);
     }).catch (error => {

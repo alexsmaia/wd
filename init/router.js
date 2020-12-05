@@ -11,6 +11,7 @@ module.exports = (app) => {
     app.use('/topics', require('../routes/site/topics.routes'));
     app.use('/videos', require('../routes/site/videos.routes'));
     
+    app.use('/wd/comments', isAdmin, require('../routes/wd/comments.routes'));
     app.use('/wd/favorites', isAdmin, require('../routes/wd/favorites.routes'));
     app.use('/wd/topics', isAdmin, require('../routes/wd/topics.routes'));
     app.use('/wd/users', isAdmin, require('../routes/wd/users.routes'));

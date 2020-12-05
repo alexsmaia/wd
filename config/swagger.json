@@ -19,6 +19,43 @@
     ],
     "components": {
         "schemas": {
+            "Comments": {
+                "type": "object",
+                "required": [
+                    "userId",
+                    "videoId",
+                    "comment"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "userId": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "videoId": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "comment": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "boolean",
+                        "default": "0"
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updatedAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                }
+            },
             "Favorites": {
                 "type": "object",
                 "required": [
@@ -285,6 +322,625 @@
                 }
             }
         },
+
+
+
+        "/wd/comments": {
+            "get": {
+                "tags": [ "Comments" ],
+                "description": "<h2>Get Comments List</h2><br><p>Role required: <strong>Admin</strong></p>",
+                "responses": {
+                    "200": {
+                        "description": "Comments List",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#components/schemas/Comments" },
+                                "examples": {
+                                    "Favorite List": 
+                                    [
+                                        {
+                                            "id": 2,
+                                            "userId": 3,
+                                            "videoId": 1,
+                                            "comment": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ut efficitur nisl. Phasellus porta porttitor pulvinar. Nunc scelerisque ullamcorper nibh a consectetur. Sed ac semper ipsum. Vestibulum dignissim sem et ligula mollis scelerisque. Donec faucibus et est sit amet cursus. Proin est tortor, euismod vitae magna vitae, facilisis lobortis dolor. Aenean tempus venenatis mauris. Ut convallis nibh at est bibendum, mollis mattis ligula faucibus.",
+                                            "status": true,
+                                            "createdAt": "2020-12-02T17:42:16.000Z",
+                                            "updatedAt": "2020-12-02T17:42:16.000Z"
+                                        },
+                                        {
+                                            "id": 4,
+                                            "userId": 3,
+                                            "videoId": 2,
+                                            "comment": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ut efficitur nisl. Phasellus porta porttitor pulvinar. Nunc scelerisque ullamcorper nibh a consectetur. Sed ac semper ipsum. Vestibulum dignissim sem et ligula mollis scelerisque. Donec faucibus et est sit amet cursus. Proin est tortor, euismod vitae magna vitae, facilisis lobortis dolor. Aenean tempus venenatis mauris. Ut convallis nibh at est bibendum, mollis mattis ligula faucibus.",
+                                            "status": true,
+                                            "createdAt": "2020-12-04T08:33:54.000Z",
+                                            "updatedAt": "2020-12-04T08:33:54.000Z"
+                                          }
+                                    ]
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Error": {
+                                        "value": "Error"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Unauthorized": {
+                                        "value": "Invalid Token"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [ { "bearer": [] } ]
+            },
+            "post": {
+                "tags": [ "Comments" ],
+                "description": "<h2>Create new Comment</h2><br><p>Role required: <strong>Admin</strong></p>",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": { "$ref": "#components/schemas/Comments" },
+                            "examples": {
+                                "Favorite": {
+                                    "value": {
+                                        "userId": 1,
+                                        "videoId": 1,
+                                        "comment": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ut efficitur nisl. Phasellus porta porttitor pulvinar. Nunc scelerisque ullamcorper nibh a consectetur. Sed ac semper ipsum. Vestibulum dignissim sem et ligula mollis scelerisque. Donec faucibus et est sit amet cursus. Proin est tortor, euismod vitae magna vitae, facilisis lobortis dolor. Aenean tempus venenatis mauris. Ut convallis nibh at est bibendum, mollis mattis ligula faucibus."
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "New Comment",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#components/schemas/Favorites" }
+                            },
+                            "text/plain": {
+                                "schema": { "type": "string" }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": { "type": "string" },
+                                "examples": {
+                                    "Error": { "value": "Error" }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": { "type": "string" },
+                                "examples": {
+                                    "Unauthorized": {
+                                        "value": "Invalid Token"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [ { "bearer": [] } ]
+            }
+        },
+        "/wd/comments/relations": {
+            "get": {
+                "tags": [ "Comments" ],
+                "description": "<h2>Get Comment List with related items</h2><br><p>Related:</p><p>-> User;</p><p>-> Video</p><br><p>Role required: <strong>Admin</strong></p>",
+                "responses": {
+                    "200": {
+                        "description": "Comment List with Relations",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#components/schemas/Comments" },
+                                "examples": {
+                                    "Comments List ": [
+                                        {
+                                            "id": 4,
+                                            "userId": 3,
+                                            "videoId": 2,
+                                            "comment": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ut efficitur nisl. Phasellus porta porttitor pulvinar. Nunc scelerisque ullamcorper nibh a consectetur. Sed ac semper ipsum. Vestibulum dignissim sem et ligula mollis scelerisque. Donec faucibus et est sit amet cursus. Proin est tortor, euismod vitae magna vitae, facilisis lobortis dolor. Aenean tempus venenatis mauris. Ut convallis nibh at est bibendum, mollis mattis ligula faucibus.",
+                                            "status": true,
+                                            "createdAt": "2020-12-04T08:33:54.000Z",
+                                            "updatedAt": "2020-12-04T08:33:54.000Z",
+                                            "Video": {
+                                                "id": 2,
+                                                "title": "teste title 2",
+                                                "youtubeid": "testeyoutubeid 2",
+                                                "status": true,
+                                                "createdAt": "2020-12-01T16:14:47.000Z",
+                                                "updatedAt": "2020-12-01T16:14:47.000Z"
+                                            },
+                                            "User": {
+                                                "id": 3,
+                                                "username": "registered",
+                                                "email": "registered@mail.pt",
+                                                "password": "$2b$10$yUhKHY3B/lgSEiZjVpz/4OtRxXwY40HtEaW8kCqsdvizMwGgKp9oi",
+                                                "status": true,
+                                                "role_id": 1,
+                                                "createdAt": "2020-11-28T23:43:35.000Z",
+                                                "updatedAt": "2020-12-01T09:39:59.000Z"
+                                            }
+                                        },
+                                        {
+                                            "id": 6,
+                                            "userId": 3,
+                                            "videoId": 3,
+                                            "comment": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ut efficitur nisl. Phasellus porta porttitor pulvinar. Nunc scelerisque ullamcorper nibh a consectetur. Sed ac semper ipsum. Vestibulum dignissim sem et ligula mollis scelerisque. Donec faucibus et est sit amet cursus. Proin est tortor, euismod vitae magna vitae, facilisis lobortis dolor. Aenean tempus venenatis mauris. Ut convallis nibh at est bibendum, mollis mattis ligula faucibus.",
+                                            "status": true,
+                                            "createdAt": "2020-12-04T16:23:50.000Z",
+                                            "updatedAt": "2020-12-04T16:23:50.000Z",
+                                            "Video": {
+                                                "id": 3,
+                                                "title": "teste title 3",
+                                                "youtubeid": "testeyoutubeid 3",
+                                                "status": true,
+                                                "createdAt": "2020-12-01T16:51:13.000Z",
+                                                "updatedAt": "2020-12-01T16:51:13.000Z"
+                                            },
+                                            "User": {
+                                                "id": 3,
+                                                "username": "registered",
+                                                "email": "registered@mail.pt",
+                                                "password": "$2b$10$yUhKHY3B/lgSEiZjVpz/4OtRxXwY40HtEaW8kCqsdvizMwGgKp9oi",
+                                                "status": true,
+                                                "role_id": 1,
+                                                "createdAt": "2020-11-28T23:43:35.000Z",
+                                                "updatedAt": "2020-12-01T09:39:59.000Z"
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Error": {
+                                        "value": "Error"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Unauthorized": {
+                                        "value": "Invalid Token"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [ { "bearer": [] } ]
+            }
+        },
+        "/wd/comments/{id}": {
+            "get": {
+                "tags": [ "Comments" ],
+                "description": "<h2>Get Comments Info by Id</h2><br><p>Role required <strong>Admin</strong></p>",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Comment Id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Comment Info",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#components/schemas/Comments" },
+                                "examples": {
+                                    "Favorite": {
+                                        "id": 2,
+                                        "userId": 3,
+                                        "videoId": 1,
+                                        "comment": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ut efficitur nisl. Phasellus porta porttitor pulvinar. Nunc scelerisque ullamcorper nibh a consectetur. Sed ac semper ipsum. Vestibulum dignissim sem et ligula mollis scelerisque. Donec faucibus et est sit amet cursus. Proin est tortor, euismod vitae magna vitae, facilisis lobortis dolor. Aenean tempus venenatis mauris. Ut convallis nibh at est bibendum, mollis mattis ligula faucibus.",
+                                        "status": true,
+                                        "createdAt": "2020-12-02T17:42:16.000Z",
+                                        "updatedAt": "2020-12-02T17:42:16.000Z"
+                                    }
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Error": {
+                                        "value": "Error"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Unauthorized": {
+                                        "value": "Invalid Token"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [ { "bearer": [] } ]
+            },
+            "put": {
+                "tags": [ "Comments" ],
+                "description": "<h2>Update Comment</h2><br><p>Role required: <strong>Admin</strong></p>",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Comment Id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": { "$ref": "#components/schemas/Favorites" },
+                            "examples": {
+                                "Comment": {
+                                    "value": {
+                                        "userId": "3",
+                                        "videoId": "3",
+                                        "comment": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ut efficitur nisl. Phasellus porta porttitor pulvinar. Nunc scelerisque ullamcorper nibh a consectetur. Sed ac semper ipsum. Vestibulum dignissim sem et ligula mollis scelerisque. Donec faucibus et est sit amet cursus. Proin est tortor, euismod vitae magna vitae, facilisis lobortis dolor. Aenean tempus venenatis mauris. Ut convallis nibh at est bibendum, mollis mattis ligula faucibus.",
+                                        "status": true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Comment Updated",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#components/schemas/Comments" }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Error": { 
+                                        "value": "Error" 
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Unauthorized": {
+                                        "value": "Invalid Token"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [ { "bearer": [] } ]
+            },
+            "delete": {
+                "tags": [ "Comments" ],
+                "description": "<h2>Delete Comment</h2><br><p>Role required: <strong>Super Admin</strong></p>",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Comment Id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            },
+                            "examples": {
+                                "Success": {
+                                    "value": "Comment Deleted"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Error": {
+                                        "value": "Error"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Unauthorized": {
+                                        "value": "Invalid Token"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [ { "bearer": [] } ]
+            }
+        },
+        "/wd/comments/{id}/relations": {
+            "get": {
+                "tags": [ "Comments" ],
+                "description": "<h2>Get Comments info by Id with relations</h2><br><p>Related:</p><p>-> User;</p><p>-> Video</p><br><p>Role required <strong>Admin</strong></p>",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Comment Id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Comment Info with relations",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#components/schemas/Comments" },
+                                "examples": {
+                                    "Favorite": {
+                                        "id": 4,
+                                        "userId": 3,
+                                        "videoId": 2,
+                                        "comment": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ut efficitur nisl. Phasellus porta porttitor pulvinar. Nunc scelerisque ullamcorper nibh a consectetur. Sed ac semper ipsum. Vestibulum dignissim sem et ligula mollis scelerisque. Donec faucibus et est sit amet cursus. Proin est tortor, euismod vitae magna vitae, facilisis lobortis dolor. Aenean tempus venenatis mauris. Ut convallis nibh at est bibendum, mollis mattis ligula faucibus.",
+                                        "status": true,
+                                        "createdAt": "2020-12-04T08:33:54.000Z",
+                                        "updatedAt": "2020-12-04T08:33:54.000Z",
+                                        "Video": {
+                                            "id": 2,
+                                            "title": "teste title 2",
+                                            "youtubeid": "testeyoutubeid 2",
+                                            "status": true,
+                                            "createdAt": "2020-12-01T16:14:47.000Z",
+                                            "updatedAt": "2020-12-01T16:14:47.000Z"
+                                        },
+                                        "User": {
+                                            "id": 3,
+                                            "username": "registered",
+                                            "email": "registered@mail.pt",
+                                            "password": "$2b$10$yUhKHY3B/lgSEiZjVpz/4OtRxXwY40HtEaW8kCqsdvizMwGgKp9oi",
+                                            "status": true,
+                                            "role_id": 1,
+                                            "createdAt": "2020-11-28T23:43:35.000Z",
+                                            "updatedAt": "2020-12-01T09:39:59.000Z"
+                                        }
+                                    }
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Error": {
+                                        "value": "Error"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Unauthorized": {
+                                        "value": "Invalid Token"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [ { "bearer": [] } ]
+            }
+        },
+        "/wd/comments/{id}/status": {
+            "put": {
+                "tags": [ "Comments" ],
+                "description": "<h2>Change Comment Status</h2><br><p>Role required: <strong>Admin</strong></p>",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Comment Id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            },
+                            "examples": {
+                                "Success": {
+                                    "value": "Comment Status Active<br>Comment Status Inactive"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Error": {
+                                        "value": "Error"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Unauthorized": {
+                                        "value": "Invalid Token"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [ { "bearer": [] } ]
+            }
+        },
+
         "/favorites": {
             "get": {
                 "tags": [ "Favorites" ],
@@ -1015,9 +1671,7 @@
         },
         "/topics/{id}": {
             "get": {
-                "tags": [
-                    "Topics"
-                ],
+                "tags": [ "Topics" ],
                 "description": "<h2>Get Topic Info by Id</h2><br><p>Return the selected Topic with all associated Videos.</p>",
                 "parameters": [
                     {
@@ -1084,9 +1738,7 @@
         },
         "/wd/topics": {
             "get": {
-                "tags": [
-                    "Topics"
-                ],
+                "tags": [ "Topics" ],
                 "description": "<h2>Get Topics List</h2><br><p>Role required: <strong>Admin</strong></p>",
                 "responses": {
                     "200": {
@@ -1154,9 +1806,7 @@
                 "security": [ { "bearer": [] } ]
             },
             "post": {
-                "tags": [
-                    "Topics"
-                ],
+                "tags": [ "Topics" ],
                 "description": "<h2>Create new Topic</h2><br><p>Role required: <strong>Admin</strong></p>",
                 "requestBody": {
                     "content": {
@@ -1224,9 +1874,7 @@
         },
         "/wd/topics/{id}": {
             "get": {
-                "tags": [
-                    "Topics"
-                ],
+                "tags": [ "Topics" ],
                 "description": "Get Topic Info by Id<br>Role required Admin",
                 "parameters": [
                     {
@@ -1296,9 +1944,7 @@
                 "security": [ { "bearer": [] } ]
             },
             "put": {
-                "tags": [
-                    "Topics"
-                ],
+                "tags": [ "Topics" ],
                 "description": "<h2>Update Topic</h2><br><p>Role required: <strong>Admin</strong></p>",
                 "parameters": [
                     {
@@ -1375,9 +2021,7 @@
                 "security": [ { "bearer": [] } ]
             },
             "delete": {
-                "tags": [
-                    "Topics"
-                ],
+                "tags": [ "Topics" ],
                 "description": "<h2>Delete Topic</h2><br><p>Topics with associated Videos cannot be deleted.</p><br><p>Role required: <strong>Super Admin</strong></p>",
                 "parameters": [
                     {
@@ -1457,9 +2101,7 @@
         },
         "/wd/topics/{id}/status": {
             "put": {
-                "tags": [
-                    "Topics"
-                ],
+                "tags": [ "Topics" ],
                 "description": "<h2>Change Topic Status</h2><br><p>Role required: <strong>Admin</strong></p>",
                 "parameters": [
                     {
@@ -1524,9 +2166,7 @@
         },
         "/users/{id}": {
             "put": {
-                "tags": [
-                    "Users"
-                ],
+                "tags": [ "Users" ],
                 "description": "<h2>Update User</h2><br><p>Register Users can update her own info</p><p>Admin Users can update Register Users info and her own.</p><p>Super Admin can update all Users</p><br><p>Role required: <strong>Register</strong>",
                 "parameters": [
                     {
@@ -1606,9 +2246,7 @@
         },
         "/users/profile": {
             "get": {
-                "tags": [
-                    "Users"
-                ],
+                "tags": [ "Users" ],
                 "description": "<h2>User Profile</h2><br><p>Only can access own Profile</p><br><p>Role required: <strong>Register</strong>",
                 "responses": {
                     "200": {
@@ -1672,9 +2310,7 @@
         },
         "/users/{id}/password": {
             "put": {
-                "tags": [
-                    "Users"
-                ],
+                "tags": [  "Users" ],
                 "description": "<h2>Change User Password</h2><br><p>Users can change their own passowrds or Super Admin can change any password.</p><p>Role required: <strong>Register</strong></p>",
                 "parameters": [
                     {
@@ -1824,9 +2460,7 @@
         },
         "/wd/users/{id}": {
             "get": {
-                "tags": [
-                    "Users"
-                ],
+                "tags": [ "Users" ],
                 "description": "Get User Info by Id<br>Role required Admin",
                 "parameters": [
                     {
@@ -1896,9 +2530,7 @@
                 "security": [ { "bearer": [] } ]
             },
             "put": {
-                "tags": [
-                    "Users"
-                ],
+                "tags": [ "Users" ],
                 "description": "<h2>Update User</h2><br><p>Only Super Admin can update data from other Super Admin</p><p>Role required: <strong>Admin</strong>",
                 "parameters": [
                     {
@@ -1976,9 +2608,7 @@
                 "security": [ { "bearer": [] } ]
             },
             "delete": {
-                "tags": [
-                    "Users"
-                ],
+                "tags": [ "Users" ],
                 "description": "<h2>Delete User</h2><br><p>User can't delete himself.</p><p>Role required: <strong>Super Admin</strong></p>",
                 "parameters": [
                     {
@@ -2058,9 +2688,7 @@
         },
         "/wd/users/{id}/role": {
             "put": {
-                "tags": [
-                    "Users"
-                ],
+                "tags": [ "Users" ],
                 "description": "<h2>Change User Role</h2><br><p>Super Admin can only assign Roles to others Users excluding him self.</p><p>Role required: <strong>Super Admin</strong></p>",
                 "parameters": [
                     {
@@ -2164,9 +2792,7 @@
         },
         "/wd/users/{id}/status": {
             "put": {
-                "tags": [
-                    "Users"
-                ],
+                "tags": [ "Users" ],
                 "description": "<h2>Change User Status</h2><br><p>Can't change own status</p><p>Only Super Admin can change other Super Admin Status<p></p><p>Role required: <strong>Admin</strong></p>",
                 "parameters": [
                     {
@@ -2246,9 +2872,7 @@
         },
         "/videos/{id}": {
             "get": {
-                "tags": [
-                    "Videos"
-                ],
+                "tags": [ "Videos" ],
                 "description": "<h2>Get Video Info by Id</h2><br><p>Return the selected Video with all associated Topics.</p></p>Return empty if no active Topic associated</p>",
                 "parameters": [
                     {
@@ -2315,9 +2939,7 @@
         },
         "/wd/videos": {
             "get": {
-                "tags": [
-                    "Videos"
-                ],
+                "tags": [ "Videos" ],
                 "description": "<h2>Get Videos List</h2><br><p>Role required: <strong>Admin</strong></p>",
                 "responses": {
                     "200": {
@@ -2383,9 +3005,7 @@
                 "security": [ { "bearer": [] } ]
             },
             "post": {
-                "tags": [
-                    "Videos"
-                ],
+                "tags": [ "Videos" ],
                 "description": "<h2>Create new Video</h2><br><p>Role required: <strong>Admin</strong></p>",
                 "requestBody": {
                     "content": {
@@ -2453,9 +3073,7 @@
         },
         "/wd/videos/{id}": {
             "get": {
-                "tags": [
-                    "Videos"
-                ],
+                "tags": [ "Videos" ],
                 "description": "<h2>Get Video Info by Id</h2><br><p>Role required: <strong>Admin</strong></p>",
                 "parameters": [
                     {
@@ -2601,9 +3219,7 @@
                 "security": [ { "bearer": [] } ]
             },
             "delete": {
-                "tags": [
-                    "Videos"
-                ],
+                "tags": [ "Videos" ],
                 "description": "<h2>Delete Video</h2><br><p>Role required: <strong>Super Admin</strong></p>",
                 "parameters": [
                     {
@@ -2668,9 +3284,7 @@
         },
         "/wd/videos/{id}/status": {
             "put": {
-                "tags": [
-                    "Videos"
-                ],
+                "tags": [ "Videos" ],
                 "description": "<h2>Change Video Status</h2><br><p>Role required: <strong>Admin</strong></p>",
                 "parameters": [
                     {

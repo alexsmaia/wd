@@ -1,19 +1,34 @@
 const models = require('../../models');
 
-// Get List of Videos
-exports.videos = async function(req, res) {
-    try {
-        const videos = await models.Topic.findAll({
-            attributes: ['id', 'topic', 'description', 'status']
-        });
-        res.status(200).json(videos);
-    } catch (error) {
+// Get Items List
+exports.listAll = function(req, res) {
+    return models.Video.findAll()
+    .then(items => {
+        res.status(200).json(items);
+    }).catch (error => {
         res.status(400).json({message:error});
-    }
+    });
 }
 
-// Get Video by Id
-exports.video = async function(req, res) {
+// Gel All items wich Relations
+exports.listAllRelations = function(req, res) {
+    return models.Video.findAll({
+        include: [
+            { model: models.Topic },
+            { model: models.Comment },
+            { model: models.Favorite,
+                include: {model: models.User}
+            }
+        ]
+    }).then (items => {
+        res.status(200).json(items);
+    }).catch (error => {
+        res.status(400).json({message:error});
+    });
+}
+
+// Get Item by Id
+exports.getItem = async function(req, res) {
     return models.Video.findOne({
         where: { id: req.params.id }
     }).then(video => {
@@ -23,7 +38,25 @@ exports.video = async function(req, res) {
     });
 }
 
-// Add Video
+// Get Item by Id
+exports.getItemRelations = async function(req, res) {
+    return models.Video.findOne({
+        where: { id: req.params.id },
+        include: [
+            { model: models.Topic },
+            { model: models.Comment },
+            { model: models.Favorite,
+                include: {model: models.User}
+            }
+        ]
+    }).then(video => {
+        res.status(200).json(video);
+    }).catch(error => {
+        res.status(400).json({message:error});
+    });
+}
+
+// Add Item
 exports.add = function(req, res) {
     // Get Topic Id's
     let topicIds = req.body.topics;
@@ -41,7 +74,7 @@ exports.add = function(req, res) {
     });
 }
 
-// Update Video
+// Update Item
 exports.update = function(req, res) {
     // ToDo - Check diference topics ids
     // Get Topic Id's
@@ -83,7 +116,7 @@ exports.update = function(req, res) {
     });
 }
 
-// Delete Topic
+// Delete Item
 exports.delete = function(req, res) {
     return models.Video.destroy({
         where : { id : req.params.id }
@@ -98,7 +131,7 @@ exports.delete = function(req, res) {
     });
 }
 
-// Change Video Satus
+// Change Item Satus
 exports.status = async function(req, res) {
     try {
         // Get Topic

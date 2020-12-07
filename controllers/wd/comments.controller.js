@@ -13,7 +13,7 @@ exports.listAll = function(req, res) {
 }
 
 // Gel All items wich Relations
-exports.listAllRelated = function(req, res) {
+exports.listAllRelations = function(req, res) {
     return models.Comment.findAll({
         include: [
             { model: models.Video },
@@ -38,7 +38,7 @@ exports.getItem = function(req, res) {
 }
 
 // Get Item by Id with relations
-exports.getItemRelated = function(req, res) {
+exports.getItemRelations = function(req, res) {
     return models.Comment.findOne({
         where: { id: req.params.id },
         include: [
@@ -107,7 +107,7 @@ exports.delete = function(req, res) {
     });
 }
 
-// Change Topic Satus
+// Change Item Satus
 exports.status = function(req, res) {
     return models.Comment.findOne({
         where: { id: req.params.id }

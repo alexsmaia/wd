@@ -16,8 +16,8 @@ let {isSupAdmin} = require('../../middleware/isSupAdmin.js');
 // Get All Items
 router.get('/', controller.listAll);
 
-// Get All Items with relations
-router.get('/relations', controller.listAllRelated);
+// Get Items List with relations
+router.get('/relations', controller.listAllRelations);
 
 // Get Item by Id
 router.get('/:id', [
@@ -37,7 +37,7 @@ router.get('/:id/relations', [
 ],  function (req, res) {
     const errors = validationResult(req); 
     if (errors.isEmpty()) {
-        controller.getItemRelated(req, res); 
+        controller.getItemRelations(req, res); 
     } else {
         res.status(400).json({errors: errors.array()})
     }

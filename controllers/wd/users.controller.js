@@ -2,34 +2,28 @@ const models = require('../../models');
 const token = require('../../utilities/token');
 
 // Get List of Users
-exports.users = async function(req, res) {
-    try {
-        const users = await models.User.findAll({
-            attributes: ['id', 'username', 'email', 'status', 'role_id']
-        });
-        res.status(200).json(users);
-    } catch (error) {
+exports.listAll = async function(req, res) {
+    return models.User.findAll({
+        include: { model: models.Video }
+    }).then (items => {
+        res.status(200).json(items);
+    }).catch (error => {
         res.status(400).json({message:error});
-    }
+    });
 }
 
-// Get User by id
-exports.user = async function(req, res) {
-    try {
-        const user = await models.User.findOne({
-            where: { id: req.params.id }
-        });
-        if (user.id > 0) {
-            res.status(200).json(user);
-        } else {
-            res.status(400).json("Error"); 
-        }
-    } catch (error) {
+// Get Item by Id
+exports.getItem = function(req, res) {
+    return models.User.findOne({
+        where: {id: req.params.id},
+    }).then(item => {
+        res.status(200).json(item);
+    }).catch (error => {
         res.status(400).json({message:error});
-    }
+    });
 }
 
-// Delete User
+// Delete Item
 exports.delete = function(req, res) {
     token.getLogedId(req.headers.authorization, (logedUserId) => {
         // Check if user try delete himself
@@ -38,9 +32,7 @@ exports.delete = function(req, res) {
         } else {
             // Delete User
             return models.User.destroy({
-                where : {
-                    id : req.params.id
-                }
+                where : { id : req.params.id }
             }).then(result => {
                 if(result) {
                     res.status(200).json("User Deleted");

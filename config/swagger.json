@@ -655,7 +655,7 @@
         "/wd/comments/relations": {
             "get": {
                 "tags": [ "Comments" ],
-                "description": "<h2>Get Comment List with related items</h2><br><p>Related:</p><p>-> User;</p><p>-> Video</p><br><p>Role required: <strong>Admin</strong></p>",
+                "description": "<h2>Get Comment List with related items</h2><br><p>Relations:</p><p>-> User;</p><p>-> Video</p><br><p>Role required: <strong>Admin</strong></p>",
                 "responses": {
                     "200": {
                         "description": "Comment List with Relations",
@@ -983,7 +983,7 @@
         "/wd/comments/{id}/relations": {
             "get": {
                 "tags": [ "Comments" ],
-                "description": "<h2>Get Comments info by Id with relations</h2><br><p>Related:</p><p>-> User;</p><p>-> Video</p><br><p>Role required <strong>Admin</strong></p>",
+                "description": "<h2>Get Comments info by Id with relations</h2><br><p>Relations:</p><p>-> User;</p><p>-> Video</p><br><p>Role required <strong>Admin</strong></p>",
                 "parameters": [
                     {
                         "name": "id",
@@ -1725,7 +1725,7 @@
         "/wd/favorites/{id}/relations": {
             "get": {
                 "tags": [ "Favorites" ],
-                "description": "<h2>Get Favorite Info by Id with relations</h2><br><p>Related:</p><p>-> User;</p><p>-> Video</p><br><p>Role required <strong>Admin</strong></p>",
+                "description": "<h2>Get Favorite Info by Id with relations</h2><br><p>Relations:</p><p>-> User;</p><p>-> Video</p><br><p>Role required <strong>Admin</strong></p>",
                 "parameters": [
                     {
                         "name": "id",
@@ -1869,7 +1869,7 @@
         "/topics/{id}": {
             "get": {
                 "tags": [ "Topics" ],
-                "description": "<h2>Get Topic Info by Id</h2><br><p>Return the selected Topic with all associated Videos.</p>",
+                "description": "<h2>Get Topic Info by Id</h2>",
                 "parameters": [
                     {
                         "name": "id",
@@ -1891,22 +1891,74 @@
                                     "Topic": {
                                         "id": 3,
                                         "topic": "CSS",
-                                        "description": "Altere a aparência de um Site",
-                                        "Videos": [
-                                            {
-                                                "id": 4,
-                                                "title": "teste title 4",
-                                                "youtubeid": "testeyoutubeid 4",
-                                                "TopicVideo": {
-                                                    "createdAt": "2020-12-01T16:53:36.000Z",
-                                                    "updatedAt": "2020-12-01T16:53:36.000Z",
-                                                    "TopicId": 3,
-                                                    "VideoId": 4
-                                                }
-                                            }
-                                        ]
+                                        "description": "Altere a aparência de um Site"
                                     }
                                 }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Error": {
+                                        "value": "Error"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/topics/{id}/relations": {
+            "get": {
+                "tags": [ "Topics" ],
+                "description": "<h2>Get Topic Info by Id with relations</h2><br><p>Return the selected Topic with all associated data.</p></p>Relations:</p><p>- Videos.</p></p>Return empty if no active Topic associated</p>",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Topic Id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Topic Info",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#components/schemas/Topics" },
+                                "examples": {
+                                    "id": 1,
+                                    "topic": "HTML",
+                                    "description": "Crie a estrutura de um Site",
+                                    "Videos": [
+                                        {
+                                            "id": 9,
+                                            "title": "teste title 9",
+                                            "youtubeid": "testeyoutubeid 9",
+                                            "TopicVideo": {
+                                                "createdAt": "2020-12-01T17:39:28.000Z",
+                                                "updatedAt": "2020-12-01T17:39:28.000Z",
+                                                "TopicId": 1,
+                                                "VideoId": 9
+                                            }
+                                        }
+                                    ]
+                                  }
                             },
                             "text/plain": {
                                 "schema": {
@@ -2027,6 +2079,118 @@
                         "content": {
                             "application/json": {
                                 "schema": { "$ref": "#components/schemas/Topics" }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Error": {
+                                        "value": "Error"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Unauthorized": {
+                                        "value": "Invalid Token"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [ { "bearer": [] } ]
+            }
+        },
+        "/wd/topics/relations": {
+            "get": {
+                "tags": [ "Topics" ],
+                "description": "<h2>Get Topics List with related items</h2><br><p>Relations:</p><p>-> Video</p><br><p>Role required: <strong>Admin</strong></p>",
+                "responses": {
+                    "200": {
+                        "description": "Topics List with Relations",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#components/schemas/Topics" },
+                                "examples": {
+                                    "Topics List ": [
+                                        {
+                                            "id": 4,
+                                            "userId": 3,
+                                            "videoId": 2,
+                                            "comment": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ut efficitur nisl. Phasellus porta porttitor pulvinar. Nunc scelerisque ullamcorper nibh a consectetur. Sed ac semper ipsum. Vestibulum dignissim sem et ligula mollis scelerisque. Donec faucibus et est sit amet cursus. Proin est tortor, euismod vitae magna vitae, facilisis lobortis dolor. Aenean tempus venenatis mauris. Ut convallis nibh at est bibendum, mollis mattis ligula faucibus.",
+                                            "status": true,
+                                            "archived": false,
+                                            "createdAt": "2020-12-04T08:33:54.000Z",
+                                            "updatedAt": "2020-12-04T08:33:54.000Z",
+                                            "Video": {
+                                                "id": 2,
+                                                "title": "teste title 2",
+                                                "youtubeid": "testeyoutubeid 2",
+                                                "status": true,
+                                                "createdAt": "2020-12-01T16:14:47.000Z",
+                                                "updatedAt": "2020-12-01T16:14:47.000Z"
+                                            },
+                                            "User": {
+                                                "id": 3,
+                                                "username": "registered",
+                                                "email": "registered@mail.pt",
+                                                "password": "$2b$10$yUhKHY3B/lgSEiZjVpz/4OtRxXwY40HtEaW8kCqsdvizMwGgKp9oi",
+                                                "status": true,
+                                                "role_id": 1,
+                                                "createdAt": "2020-11-28T23:43:35.000Z",
+                                                "updatedAt": "2020-12-01T09:39:59.000Z"
+                                            }
+                                        },
+                                        {
+                                            "id": 6,
+                                            "userId": 3,
+                                            "videoId": 3,
+                                            "comment": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ut efficitur nisl. Phasellus porta porttitor pulvinar. Nunc scelerisque ullamcorper nibh a consectetur. Sed ac semper ipsum. Vestibulum dignissim sem et ligula mollis scelerisque. Donec faucibus et est sit amet cursus. Proin est tortor, euismod vitae magna vitae, facilisis lobortis dolor. Aenean tempus venenatis mauris. Ut convallis nibh at est bibendum, mollis mattis ligula faucibus.",
+                                            "status": true,
+                                            "archived": false,
+                                            "createdAt": "2020-12-04T16:23:50.000Z",
+                                            "updatedAt": "2020-12-04T16:23:50.000Z",
+                                            "Video": {
+                                                "id": 3,
+                                                "title": "teste title 3",
+                                                "youtubeid": "testeyoutubeid 3",
+                                                "status": true,
+                                                "createdAt": "2020-12-01T16:51:13.000Z",
+                                                "updatedAt": "2020-12-01T16:51:13.000Z"
+                                            },
+                                            "User": {
+                                                "id": 3,
+                                                "username": "registered",
+                                                "email": "registered@mail.pt",
+                                                "password": "$2b$10$yUhKHY3B/lgSEiZjVpz/4OtRxXwY40HtEaW8kCqsdvizMwGgKp9oi",
+                                                "status": true,
+                                                "role_id": 1,
+                                                "createdAt": "2020-11-28T23:43:35.000Z",
+                                                "updatedAt": "2020-12-01T09:39:59.000Z"
+                                            }
+                                        }
+                                    ]
+                                }
                             },
                             "text/plain": {
                                 "schema": {
@@ -2287,6 +2451,99 @@
                                 "examples": {
                                     "Unauthorized": {
                                         "value": "Can't delete associated Topic"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [ { "bearer": [] } ]
+            }
+        },
+        "/wd/topics/{id}/relations": {
+            "get": {
+                "tags": [ "Topics" ],
+                "description": "<h2>Get Topics info by Id with relations</h2><br><p>Relations:</p><p>-> Video</p><br><p>Role required <strong>Admin</strong></p>",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Topic Id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Topic Info with relations",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#components/schemas/Topics" },
+                                "examples": {
+                                    "Favorite": {
+                                        "id": 4,
+                                        "userId": 3,
+                                        "videoId": 2,
+                                        "comment": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ut efficitur nisl. Phasellus porta porttitor pulvinar. Nunc scelerisque ullamcorper nibh a consectetur. Sed ac semper ipsum. Vestibulum dignissim sem et ligula mollis scelerisque. Donec faucibus et est sit amet cursus. Proin est tortor, euismod vitae magna vitae, facilisis lobortis dolor. Aenean tempus venenatis mauris. Ut convallis nibh at est bibendum, mollis mattis ligula faucibus.",
+                                        "status": true,
+                                        "archived": false,
+                                        "createdAt": "2020-12-04T08:33:54.000Z",
+                                        "updatedAt": "2020-12-04T08:33:54.000Z",
+                                        "Video": {
+                                            "id": 2,
+                                            "title": "teste title 2",
+                                            "youtubeid": "testeyoutubeid 2",
+                                            "status": true,
+                                            "createdAt": "2020-12-01T16:14:47.000Z",
+                                            "updatedAt": "2020-12-01T16:14:47.000Z"
+                                        },
+                                        "User": {
+                                            "id": 3,
+                                            "username": "registered",
+                                            "email": "registered@mail.pt",
+                                            "password": "$2b$10$yUhKHY3B/lgSEiZjVpz/4OtRxXwY40HtEaW8kCqsdvizMwGgKp9oi",
+                                            "status": true,
+                                            "role_id": 1,
+                                            "createdAt": "2020-11-28T23:43:35.000Z",
+                                            "updatedAt": "2020-12-01T09:39:59.000Z"
+                                        }
+                                    }
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Error": {
+                                        "value": "Error"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Unauthorized": {
+                                        "value": "Invalid Token"
                                     }
                                 }
                             }
@@ -3084,12 +3341,12 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Topic Info",
+                        "description": "Video Info",
                         "content": {
                             "application/json": {
                                 "schema": { "$ref": "#components/schemas/Videos" },
                                 "examples": {
-                                    "Video": {
+                                    "video": {
                                         "id": 4,
                                         "title": "teste title 4",
                                         "youtubeid": "testeyoutubeid 4",
@@ -3107,6 +3364,87 @@
                                             }
                                         ]
                                     }
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Error": {
+                                        "value": "Error"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/videos/{id}/relations": {
+            "get": {
+                "tags": [ "Videos" ],
+                "description": "<h2>Get Video Info by Id with relations</h2><br><p>Return the selected Video with all associated data.</p></p>Relations:</p><p>- Topics;</p><p>- Comments.</p></p>Return empty if no active Topic associated</p>",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Video Id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Video Info",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#components/schemas/Videos" },
+                                "examples": {
+                                    "video": {
+                                        "id": 4,
+                                        "title": "teste title 4",
+                                        "youtubeid": "testeyoutubeid 4",
+                                        "Topics": [
+                                            {
+                                                "id": 3,
+                                                "topic": "CSS",
+                                                "description": "Altere a aparência de um Site",
+                                                "TopicVideo": {
+                                                    "createdAt": "2020-12-01T16:53:36.000Z",
+                                                    "updatedAt": "2020-12-01T16:53:36.000Z",
+                                                    "TopicId": 3,
+                                                    "VideoId": 4
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    "comments": [
+                                        {
+                                            "id": 1,
+                                            "userId": 1,
+                                            "videoId": 4,
+                                            "comment": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ut efficitur nisl. Phasellus porta porttitor pulvinar. Nunc scelerisque ullamcorper nibh a consectetur. Sed ac semper ipsum. Vestibulum dignissim sem et ligula mollis scelerisque. Donec faucibus et est sit amet cursus.",
+                                            "status": 1,
+                                            "archived": 0,
+                                            "createdAt": "2020-12-05T10:57:37.000Z",
+                                            "updatedAt": "2020-12-05T17:02:09.000Z",
+                                            "UserId": 1,
+                                            "VideoId": 4
+                                        }
+                                    ]
                                 }
                             },
                             "text/plain": {
@@ -3226,6 +3564,158 @@
                         "content": {
                             "application/json": {
                                 "schema": { "$ref": "#components/schemas/Topics" }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Error": {
+                                        "value": "Error"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Unauthorized": {
+                                        "value": "Invalid Token"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [ { "bearer": [] } ]
+            }
+        },
+        "/wd/videos/relations": {
+            "get": {
+                "tags": [ "Videos" ],
+                "description": "<h2>Get Videos List with relations</h2><br><p>Relations:<p>-> Topics;</p><p>-> Comments;</p><p>-> Favorites with User relations.</p><br><p>Role required: <strong>Admin</strong></p>",
+                "responses": {
+                    "200": {
+                        "description": "Videos List",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#components/schemas/Videos" },
+                                "examples": {
+                                    "Video List": [
+                                        {
+                                            "id": 1,
+                                            "title": "teste title",
+                                            "youtubeid": "testeyoutubeid",
+                                            "status": true,
+                                            "createdAt": "2020-12-01T16:13:30.000Z",
+                                            "updatedAt": "2020-12-01T16:13:30.000Z",
+                                            "Topics": [
+                                                {
+                                                    "id": 7,
+                                                    "topic": "Updated Topic",
+                                                    "description": "Updated Topic description",
+                                                    "hexcolor": "#F1C40F",
+                                                    "status": true,
+                                                    "createdAt": "2020-11-29T22:24:41.000Z",
+                                                    "updatedAt": "2020-11-29T22:24:41.000Z",
+                                                    "TopicVideo": {
+                                                        "createdAt": "2020-12-01T19:41:56.000Z",
+                                                        "updatedAt": "2020-12-01T19:41:56.000Z",
+                                                        "TopicId": 7,
+                                                        "VideoId": 1
+                                                    }
+                                                }
+                                            ],
+                                            "Comments": [
+                                                {
+                                                    "id": 5,
+                                                    "userId": 3,
+                                                    "videoId": 1,
+                                                    "comment": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ut efficitur nisl. Phasellus porta porttitor pulvinar. Nunc scelerisque ullamcorper nibh a consectetur. Sed ac semper ipsum.",
+                                                    "status": 1,
+                                                    "archived": 0,
+                                                    "createdAt": "2020-12-05T21:41:52.000Z",
+                                                    "updatedAt": "2020-12-05T21:41:52.000Z"
+                                                }
+                                            ],
+                                            "Favorites": [
+                                              {
+                                                    "id": 7,
+                                                    "userId": 1,
+                                                    "videoId": 1,
+                                                    "createdAt": "2020-12-04T17:15:19.000Z",
+                                                    "updatedAt": "2020-12-04T17:15:19.000Z",
+                                                    "UserId": 1,
+                                                    "VideoId": 1,
+                                                    "User": {
+                                                        "id": 1,
+                                                        "username": "supadmin",
+                                                        "email": "supadmin@mail.pt",
+                                                        "password": "$2b$10$CKL60nmJrmaFGTcxjEN5F.xQKs/YHkE4wwd5c8aFrJvwE4l5/rlpS",
+                                                        "status": true,
+                                                        "role_id": 3,
+                                                        "createdAt": "2020-11-29T09:23:05.000Z",
+                                                        "updatedAt": "2020-11-29T09:23:05.000Z"
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "id": 4,
+                                            "title": "teste title 4",
+                                            "youtubeid": "testeyoutubeid 4",
+                                            "status": true,
+                                            "createdAt": "2020-12-01T16:53:36.000Z",
+                                            "updatedAt": "2020-12-01T16:53:36.000Z",
+                                            "Topics": [
+                                                {
+                                                    "id": 3,
+                                                    "topic": "CSS",
+                                                    "description": "Altere a aparência de um Site",
+                                                    "hexcolor": "#C0392B",
+                                                    "status": true,
+                                                    "createdAt": "2020-11-29T21:26:03.000Z",
+                                                    "updatedAt": "2020-11-29T21:26:03.000Z",
+                                                    "TopicVideo": {
+                                                    "createdAt": "2020-12-01T16:53:36.000Z",
+                                                    "updatedAt": "2020-12-01T16:53:36.000Z",
+                                                    "TopicId": 3,
+                                                    "VideoId": 4
+                                                    }
+                                                }
+                                            ],
+                                            "Comments": [
+                                                {
+                                                    "id": 1,
+                                                    "userId": 1,
+                                                    "videoId": 4,
+                                                    "comment": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ut efficitur nisl. Phasellus porta porttitor pulvinar. Nunc scelerisque ullamcorper nibh a consectetur. Sed ac semper ipsum. Vestibulum dignissim sem et ligula mollis scelerisque. Donec faucibus et est sit amet cursus.",
+                                                    "status": 1,
+                                                    "archived": 0,
+                                                    "createdAt": "2020-12-05T10:57:37.000Z",
+                                                    "updatedAt": "2020-12-05T17:02:09.000Z"
+                                                }
+                                            ],
+                                            "Favorites": []
+                                        }
+                                    ]
+                                }
                             },
                             "text/plain": {
                                 "schema": {
@@ -3441,6 +3931,131 @@
                             "examples": {
                                 "Success": {
                                     "value": "Video Deleted"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Error": {
+                                        "value": "Error"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "Unauthorized": {
+                                        "value": "Invalid Token"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [ { "bearer": [] } ]
+            }
+        },
+        "/wd/videos/{id}/relations": {
+            "get": {
+                "tags": [ "Videos" ],
+                "description": "<h2>Get Video by Id with relations</h2><br><p>Relations:<p>-> Topics;</p><p>-> Comments;</p><p>-> Favorites with User relations.</p><br><p>Role required: <strong>Admin</strong></p>",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Video Id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Videos List",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#components/schemas/Videos" },
+                                "examples": {
+                                    "Video List": [
+                                        {
+                                            "id": 1,
+                                            "title": "teste title",
+                                            "youtubeid": "testeyoutubeid",
+                                            "status": true,
+                                            "createdAt": "2020-12-01T16:13:30.000Z",
+                                            "updatedAt": "2020-12-01T16:13:30.000Z",
+                                            "Topics": [
+                                                {
+                                                    "id": 7,
+                                                    "topic": "Updated Topic",
+                                                    "description": "Updated Topic description",
+                                                    "hexcolor": "#F1C40F",
+                                                    "status": true,
+                                                    "createdAt": "2020-11-29T22:24:41.000Z",
+                                                    "updatedAt": "2020-11-29T22:24:41.000Z",
+                                                    "TopicVideo": {
+                                                        "createdAt": "2020-12-01T19:41:56.000Z",
+                                                        "updatedAt": "2020-12-01T19:41:56.000Z",
+                                                        "TopicId": 7,
+                                                        "VideoId": 1
+                                                    }
+                                                }
+                                            ],
+                                            "Comments": [
+                                                {
+                                                    "id": 5,
+                                                    "userId": 3,
+                                                    "videoId": 1,
+                                                    "comment": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ut efficitur nisl. Phasellus porta porttitor pulvinar. Nunc scelerisque ullamcorper nibh a consectetur. Sed ac semper ipsum.",
+                                                    "status": 1,
+                                                    "archived": 0,
+                                                    "createdAt": "2020-12-05T21:41:52.000Z",
+                                                    "updatedAt": "2020-12-05T21:41:52.000Z"
+                                                }
+                                            ],
+                                            "Favorites": [
+                                              {
+                                                    "id": 7,
+                                                    "userId": 1,
+                                                    "videoId": 1,
+                                                    "createdAt": "2020-12-04T17:15:19.000Z",
+                                                    "updatedAt": "2020-12-04T17:15:19.000Z",
+                                                    "UserId": 1,
+                                                    "VideoId": 1,
+                                                    "User": {
+                                                        "id": 1,
+                                                        "username": "supadmin",
+                                                        "email": "supadmin@mail.pt",
+                                                        "password": "$2b$10$CKL60nmJrmaFGTcxjEN5F.xQKs/YHkE4wwd5c8aFrJvwE4l5/rlpS",
+                                                        "status": true,
+                                                        "role_id": 3,
+                                                        "createdAt": "2020-11-29T09:23:05.000Z",
+                                                        "updatedAt": "2020-11-29T09:23:05.000Z"
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            },
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
                                 }
                             }
                         }

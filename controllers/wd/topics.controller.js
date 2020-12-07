@@ -1,42 +1,64 @@
 const models = require('../../models');
 
-// Get List of Topics
-exports.topics = function(req, res) {
+// Get Items List
+exports.listAll = function(req, res) {
     return models.Topic.findAll({
         include: { model: models.Video }
-    }).then (topics => {
-        res.status(200).json(topics);
+    }).then (items => {
+        res.status(200).json(items);
     }).catch (error => {
         res.status(400).json({message:error});
     });
 }
 
-// Get Topic by Id
-exports.topic = async function(req, res) {
+// Gel All items wich Relations
+exports.listAllRelations = function(req, res) {
+    return models.Topic.findAll({
+        include: { model: models.Video }
+    }).then (items => {
+        res.status(200).json(items);
+    }).catch (error => {
+        res.status(400).json({message:error});
+    });
+}
+
+// Get Item by Id
+exports.getItem = async function(req, res) {
+    return models.Topic.findOne({
+        where: { id: req.params.id }
+    }).then(item => {
+        res.status(200).json(item);
+    }).catch (error => {
+        res.status(400).json({message:error});
+    });
+}
+
+// Get Item by Id with relations
+exports.getItemRelations = function(req, res) {
     return models.Topic.findOne({
         where: { id: req.params.id },
         include: { model: models.Video }
-    }).then(topic => {
-        res.status(200).json(topic);
+    }).then(item => {
+        res.status(200).json(item);
     }).catch (error => {
         res.status(400).json({message:error});
     });
 }
 
-// Add new Topic
+// Add new Iten
 exports.add = function(req, res) {
     return models.Topic.create({
         topic: req.body.topic,
         description: req.body.description,
         hexcolor: req.body.hexcolor,
-    }).then(topic => {
-        res.status(200).json(`Topic ${topic.topic} Created`);
+    }).then(item => {
+        res.status(200).json(`Topic ${item.topic} Created`);
     }).catch(error => {
         res.status(400).json({message:error});
     });
 }
 
-// Update Topic
+// Update Item
 exports.update = function(req, res) {
     // Get Topic Update Data
     let updateTopic = {};
@@ -59,14 +81,14 @@ exports.update = function(req, res) {
     })
 }
 
-// Delete Topic
+// Update Item
 exports.delete = function(req, res) {
     return models.Topic.findOne({
         where : { id : req.params.id },
         include: [{ model: models.Video }]
-    }).then(topic => {
-        if (topic.Videos.length == 0) {
-            return topic.destroy().then(result => {
+    }).then(item => {
+        if (item.Videos.length == 0) {
+            return item.destroy().then(result => {
                 if (result) {
                     res.status(200).json("Topic Deleted");
                 } else {
@@ -83,13 +105,11 @@ exports.delete = function(req, res) {
     });
 }
 
-// Change Topic Satus
-exports.status = async function(req, res) {
-    try {
-        // Get Topic
-        const item = await models.Topic.findOne({
-            where: { id: req.params.id }
-        });
+// Change Item Satus
+exports.status = function(req, res) {
+    return models.Topic.findOne({
+        where: { id: req.params.id }
+    }).then(item => {
         if (item.id > 0) {
             let itemStatus = {};
             if (item.status) {
@@ -98,26 +118,22 @@ exports.status = async function(req, res) {
                 itemStatus.status = true;
             }
             return models.Topic.update(itemStatus, {
-                where : {
-                    id : item.id
-                }
+                where : { id : item.id }
             }).then(result => {
                 if (result) {
                     if (itemStatus.status) {
-                        res.status(200).json(`Topic ${item.topic} Active`);
+                        res.status(200).json(`Topic Published`);
                     } else {
-                        res.status(200).json(`Topic ${item.topic} Inactive`);
+                        res.status(200).json(`Topic Unpublished`);
                     }
                 } else {
                     res.status(400).json("Error");
                 }
             }).catch(error => {
                 res.status(400).json({message:error});
-            })
-        } else {
-            res.status(400).json("Error"); 
+            });
         }
-    } catch (error) {
+    }).catch(error => {
         res.status(400).json({message:error});
-    }
+    })
 }

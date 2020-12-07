@@ -13,10 +13,39 @@ let {isSupAdmin} = require('../../middleware/isSupAdmin.js');
 
 // * * Set Routes * * //
 
-// Get Topics List
-router.get('/', controller.topics);
+// Get Items List
+router.get('/', controller.listAll);
 
-// Add Topic
+// Get Items List with relations
+router.get('/relations', controller.listAllRelations);
+
+// Get Item by Id
+router.get('/:id', [
+    param('id').notEmpty().escape(), 
+],  function (req, res) {
+    const errors = validationResult(req); 
+    if (errors.isEmpty()) {
+        controller.getItem(req, res); 
+    } else {
+        res.status(400).json({errors: errors.array()})
+    }
+})
+
+// Get Item by Id with relations
+router.get('/:id/relations', [
+    param('id').notEmpty().escape(), 
+],  function (req, res) {
+    res.send('asd');
+
+    const errors = validationResult(req); 
+    if (errors.isEmpty()) {
+        controller.getItemRelations(req, res); 
+    } else {
+        res.status(400).json({errors: errors.array()})
+    }
+})
+
+// Add new Iten
 router.post('/', [
     body('topic').notEmpty().isLength({ max: 100 }).escape(),
     body('description').notEmpty().escape(),
@@ -30,19 +59,7 @@ router.post('/', [
     }
 })
 
-// Get Topic by Id
-router.get('/:id', [
-    param('id').notEmpty().escape(), 
-],  function (req, res) {
-    const errors = validationResult(req); 
-    if (errors.isEmpty()) {
-        controller.topic(req, res); 
-    } else {
-        res.status(400).json({errors: errors.array()})
-    }
-})
-
-// Update Topic
+// Update Item
 router.put('/:id', [
     param('id').notEmpty().escape(),
     body('topic').notEmpty().isLength({ max: 100 }).escape(),
@@ -57,7 +74,7 @@ router.put('/:id', [
     }
 })
 
-// Delete Topic
+// Delete Item
 router.delete('/:id', [
     param('id').notEmpty().escape(),
 ], isSupAdmin, function (req, res) {
@@ -69,7 +86,7 @@ router.delete('/:id', [
     }
 })
 
-// Update Topic Status
+// Update Item Status
 router.put('/:id/status', [
     param('id').notEmpty().escape(), 
 ],  function (req, res) {

@@ -11,7 +11,7 @@ const { validationResult, body, param } = require('express-validator')
 
 // Active Topics List
 router.get('/', function (req, res) {
-    controller.topics(req, res);
+    controller.listAll(req, res);
 });
 
 // Get Topic details by Id
@@ -20,12 +20,23 @@ router.get('/:id', [
 ], function (req, res) {
     const errors = validationResult(req); 
     if (errors.isEmpty()) {
-        controller.topic(req, res); 
+        controller.getItem(req, res); 
     } else {
         res.status(400).json({errors: errors.array()})
     }
 })
 
+// Get Item by Id with relations
+router.get('/:id/relations', [
+    param('id').notEmpty().escape(), 
+],  function (req, res) {
+    const errors = validationResult(req); 
+    if (errors.isEmpty()) {
+        controller.getItemRelations(req, res); 
+    } else {
+        res.status(400).json({errors: errors.array()})
+    }
+})
 
 // Export Routes
 module.exports = router;

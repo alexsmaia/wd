@@ -9,6 +9,7 @@ const { validationResult, body, param } = require('express-validator')
 const models = require('../../models');
 
 // * * Set Routes * * //
+
 // Update User
 router.put('/:id', [
     param('id').notEmpty().escape(),
@@ -42,6 +43,7 @@ router.put('/:id', [
         res.status(400).json({errors: errors.array()})
     }
 })
+
 // Change Password
 router.put('/:id/password', [
     param('id').notEmpty().escape(),
@@ -55,6 +57,7 @@ router.put('/:id/password', [
         res.status(400).json({errors: errors.array()})
     }
 })
+
 // User Profile
 router.get('/profile', function (req, res) {
     controller.profile(req, res);

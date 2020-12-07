@@ -1,19 +1,31 @@
 const models = require('../../models');
 
-// Get List of Topics
-exports.topics = function(req, res) {
+// Get List of Items
+exports.listAll = function(req, res) {
     return models.Topic.findAll({
         where: { status: 1 },
         attributes: ['id', 'topic', 'description']
-    }).then(topics => {
-        res.status(200).json(topics);
+    }).then(items => {
+        res.status(200).json(items);
     }).catch(error => {
         res.status(400).json({message:error});
     });
 }
 
-// Get Topic by Id
-exports.topic = function(req, res) {
+// Get Item by Id
+exports.getItem = function(req, res) {
+    return models.Topic.findOne({
+        where: [{ id: req.params.id }, {"status": 1}],
+        attributes: ['id', 'topic', 'description']
+    }).then(item => {
+        res.status(200).json(item);
+    }).catch(error => {
+        res.status(400).json({message:error});
+    });
+}
+
+// Get Item by Id with relations
+exports.getItemRelations = function(req, res) {
     return models.Topic.findOne({
         where: [{ id: req.params.id }, {"status": 1}],
         attributes: ['id', 'topic', 'description'],
@@ -21,8 +33,8 @@ exports.topic = function(req, res) {
             where: { status: 1},
             attributes: ['id', 'title', 'youtubeid']
         }
-    }).then(topic => {
-        res.status(200).json(topic);
+    }).then(item => {
+        res.status(200).json(item);
     }).catch(error => {
         res.status(400).json({message:error});
     });

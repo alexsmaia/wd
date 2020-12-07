@@ -11,10 +11,37 @@ let {isSupAdmin} = require('../../middleware/isSupAdmin.js');
 
 // * * Set Routes * * //
 
-// Get Videos List
-router.get('/', controller.videos);
+// Get Items List
+router.get('/', controller.listAll);
 
-// Add Video
+// Get Items List with relations
+router.get('/relations', controller.listAllRelations);
+
+// Get Item by Id
+router.get('/:id', [
+    param('id').notEmpty().escape(), 
+],  function (req, res) {
+    const errors = validationResult(req); 
+    if (errors.isEmpty()) {
+        controller.getItem(req, res); 
+    } else {
+        res.status(400).json({errors: errors.array()})
+    }
+})
+
+// Get Item by Id
+router.get('/:id/relations', [
+    param('id').notEmpty().escape(), 
+],  function (req, res) {
+    const errors = validationResult(req); 
+    if (errors.isEmpty()) {
+        controller.getItemRelations(req, res); 
+    } else {
+        res.status(400).json({errors: errors.array()})
+    }
+})
+
+// Add Item
 router.post('/', [
     body('title').notEmpty().isLength({ max: 100 }).escape(),
     body('youtubeid').notEmpty().isLength({ max: 100 }).escape(),
@@ -28,19 +55,7 @@ router.post('/', [
     }
 })
 
-// Get Video by Id
-router.get('/:id', [
-    param('id').notEmpty().escape(), 
-],  function (req, res) {
-    const errors = validationResult(req); 
-    if (errors.isEmpty()) {
-        controller.video(req, res); 
-    } else {
-        res.status(400).json({errors: errors.array()})
-    }
-})
-
-// Update Video
+// Update Item
 router.put('/:id', [
     param('id').notEmpty().escape(),
     body('title').notEmpty().isLength({ max: 100 }).escape(),
@@ -55,7 +70,7 @@ router.put('/:id', [
     }
 })
 
-// Delete Video
+// Delete Item
 router.delete('/:id', [
     param('id').notEmpty().escape(),
 ], isSupAdmin, function (req, res) {
@@ -67,7 +82,7 @@ router.delete('/:id', [
     }
 })
 
-// Change Status
+// Change Item Status
 router.put('/:id/status', [
     param('id').notEmpty().escape(), 
 ],  function (req, res) {

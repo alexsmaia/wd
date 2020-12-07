@@ -13,22 +13,22 @@ let {isSupAdmin} = require('../../middleware/isSupAdmin.js');
 
 // * * Set Routes * * //
 
-// Get Users List
-router.get('/', controller.users);
+// Get Item List
+router.get('/', controller.listAll);
 
-// Get User Info by Id
+// Get Item by Id
 router.get('/:id', [
     param('id').notEmpty().escape(), 
 ],  function (req, res) {
     const errors = validationResult(req); 
     if (errors.isEmpty()) {
-        controller.user(req, res); 
+        controller.getItem(req, res); 
     } else {
         res.status(400).json({errors: errors.array()})
     }
 })
 
-// Delete User
+// Delete Item
 router.delete('/:id', [
     param('id').notEmpty().escape(), 
 ], isSupAdmin, function (req, res) {

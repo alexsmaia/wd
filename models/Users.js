@@ -27,6 +27,7 @@ module.exports = (sequelize, DataTypes) => {
 
     User.associate = function(models) {
         User.hasMany(models.Favorite)
+        User.hasMany(models.Comment)
     };
 
     return User;

@@ -35,8 +35,6 @@ router.get('/:id', [
 router.get('/:id/relations', [
     param('id').notEmpty().escape(), 
 ],  function (req, res) {
-    res.send('asd');
-
     const errors = validationResult(req); 
     if (errors.isEmpty()) {
         controller.getItemRelations(req, res); 

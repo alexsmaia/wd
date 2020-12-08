@@ -9,13 +9,23 @@ const { validationResult, body, param } = require('express-validator')
 
 // * * Set Routes * * //
 
-// Get Video details by Id
+// Active Items List
+router.get('/', function (req, res) {
+    controller.listAll(req, res);
+});
+
+// Active Items List with Topic info
+router.get('/topics', function (req, res) {
+    controller.listAllTopics(req, res);
+});
+
+// Get Item by Id
 router.get('/:id', [
     param('id').notEmpty().escape(),
 ], function (req, res) {
     const errors = validationResult(req); 
     if (errors.isEmpty()) {
-        controller.video(req, res); 
+        controller.getItem(req, res); 
     } else {
         res.status(400).json({errors: errors.array()})
     }
@@ -27,15 +37,15 @@ router.get('/:id/relations', [
 ], function (req, res) {
     const errors = validationResult(req); 
     if (errors.isEmpty()) {
-        controller.videoRelations(req, res); 
+        controller.getItemRelations(req, res); 
     } else {
         res.status(400).json({errors: errors.array()})
     }
 })
 
-// Get x recents Videos
+// Get List of Recent Items with Limit
 router.get('/recent/:limit', [
-    param('id').notEmpty().escape(),
+    param('limit').notEmpty().escape(),
 ], function (req, res) {
     const errors = validationResult(req); 
     if (errors.isEmpty()) {

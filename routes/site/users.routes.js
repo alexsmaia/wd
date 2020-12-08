@@ -10,7 +10,7 @@ const models = require('../../models');
 
 // * * Set Routes * * //
 
-// Update User
+// Update
 router.put('/:id', [
     param('id').notEmpty().escape(),
     body('username').notEmpty().escape().custom((value, { req }) => {
@@ -58,10 +58,21 @@ router.put('/:id/password', [
     }
 })
 
-// User Profile
+// Profile
 router.get('/profile', function (req, res) {
     controller.profile(req, res);
 });
+
+// Profile Comments
+router.get('/profile/comments', function (req, res) {
+    controller.profileComments(req, res);
+});
+
+// Profile Favorites
+router.get('/profile/favorites', function (req, res) {
+    controller.profileFavorites(req, res);
+});
+
 
 
 // Export Routes

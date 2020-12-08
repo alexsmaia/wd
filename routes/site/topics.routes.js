@@ -9,12 +9,12 @@ const { validationResult, body, param } = require('express-validator')
 
 // * * Set Routes * * //
 
-// Active Topics List
+// List active Items
 router.get('/', function (req, res) {
     controller.listAll(req, res);
 });
 
-// Get Topic details by Id
+// Get Item by Id
 router.get('/:id', [
     param('id').notEmpty().escape(),
 ], function (req, res) {

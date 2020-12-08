@@ -31,18 +31,17 @@ exports.add = function(req, res) {
                 videoId: req.body.videoId,
                 comment: req.body.comment,
                 status: true,
-            })
-            .then(result => {
+            }).then(result => {
                 if (result) {
                     res.status(200).json(`Comment Created`);
                 } else {
-                    res.status(400).json("error");
+                    res.status(400).json("Error");
                 }
             }).catch (error => {
                 res.status(400).json({message:error});
             });
         } else {
-            res.status(400).json("error");
+            res.status(400).json("Error");
         }
     });
 }
@@ -69,7 +68,7 @@ exports.archive = function(req, res) {
                         res.status(400).json({message:error});
                     });
                 } else {
-                    res.status(400).json("error");
+                    res.status(400).json("Error");
                 }
             }).catch (error => {
                 res.status(400).json({message:error});

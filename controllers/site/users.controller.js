@@ -13,7 +13,46 @@ exports.profile = function(req, res) {
     })
 }
 
-// Update User
+// User Profile Comments
+exports.profileComments = function(req, res) { 
+    token.getLogedId(req.headers.authorization, (logedId) => {
+        return models.User.findOne({
+            where: [ { id: logedId } ],
+            include: { 
+                model: models.Comment,
+                where: { archived: 0},
+                attributes: ['id', 'comment', 'status'],
+            }
+        }).then(item => {
+            res.status(200).json(item);
+        }).catch(error => {
+            res.status(400).json({message:error});
+        });
+    })
+}
+
+// User Profile Favorites
+exports.profileFavorites = function(req, res) { 
+    token.getLogedId(req.headers.authorization, (logedId) => {
+        return models.User.findOne({
+            where: [ { id: logedId } ],
+            include: { 
+                model: models.Favorite,
+                include: {
+                    model: models.Video,
+                    where: { status: 1},
+                    attributes: ['id', 'title', 'youtubeid']
+                }
+            }
+        }).then(item => {
+            res.status(200).json(item);
+        }).catch(error => {
+            res.status(400).json({message:error});
+        });
+    })
+}
+
+// Update Item
 exports.update = function(req, res) { 
     token.getLogedUser(req.headers.authorization, (logedUser) => {
         // Get User to Update

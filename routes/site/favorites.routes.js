@@ -9,12 +9,12 @@ const { validationResult, body, param } = require('express-validator')
 
 // * * Set Routes * * //
 
-// User Favorites List
+// List all active
 router.get('/', function (req, res) {
     controller.listAllActive(req, res);
 });
 
-// User add / remove Favorite
+// Add / remove Favorite
 router.get('/:videoId', [
     param('videoId').notEmpty().escape(),
 ], function (req, res) {

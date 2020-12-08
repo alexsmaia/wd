@@ -4,7 +4,7 @@ const models = require('../../models');
 exports.listAll = function(req, res) {
     return models.Topic.findAll({
         where: { status: 1 },
-        attributes: ['id', 'topic', 'description']
+        attributes: ['id', 'topic', 'description', 'hexcolor']
     }).then(items => {
         res.status(200).json(items);
     }).catch(error => {
@@ -16,7 +16,7 @@ exports.listAll = function(req, res) {
 exports.getItem = function(req, res) {
     return models.Topic.findOne({
         where: [{ id: req.params.id }, {"status": 1}],
-        attributes: ['id', 'topic', 'description']
+        attributes: ['id', 'topic', 'description', 'hexcolor']
     }).then(item => {
         res.status(200).json(item);
     }).catch(error => {
@@ -28,7 +28,7 @@ exports.getItem = function(req, res) {
 exports.getItemRelations = function(req, res) {
     return models.Topic.findOne({
         where: [{ id: req.params.id }, {"status": 1}],
-        attributes: ['id', 'topic', 'description'],
+        attributes: ['id', 'topic', 'description', 'hexcolor'],
         include: { model: models.Video,
             where: { status: 1},
             attributes: ['id', 'title', 'youtubeid']

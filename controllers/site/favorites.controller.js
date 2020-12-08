@@ -2,7 +2,7 @@ const models = require('../../models');
 const token = require('../../utilities/token');
 
 
-// List Favorites
+// List Items
 exports.listAllActive = function(req, res) {
     token.getLogedId(req.headers.authorization, (logedId) => {
         if (logedId > 0) {
@@ -13,8 +13,8 @@ exports.listAllActive = function(req, res) {
                     where: { status: 1},
                     attributes: ['id', 'title', 'youtubeid']
                 }
-            }).then(favorite => {
-                res.status(200).json(favorite);
+            }).then(item => {
+                res.status(200).json(item);
             }).catch (error => {
                 res.status(400).json({message:error});
             });
@@ -24,7 +24,7 @@ exports.listAllActive = function(req, res) {
     })
 }
 
-// Add Favorite
+// Add Item
 exports.addRemove = function(req, res) {
     token.getLogedId(req.headers.authorization, (logedId) => {
         if (logedId > 0) {
@@ -33,13 +33,13 @@ exports.addRemove = function(req, res) {
                     videoId: req.params.videoId,
                     userId: logedId
                 }
-            }).then(favorite => {
-                if (favorite) {
-                    return favorite.destroy().then(result => {
+            }).then(item => {
+                if (item.id > 0) {
+                    return item.destroy().then(result => {
                         if (result) {
                             res.status(200).json("Video removed from Favorites");
                         } else {
-                            res.status(400).json("error");
+                            res.status(400).json("Error");
                         }
                     }).catch(error => {
                         res.status(400).json({message:error});
@@ -52,7 +52,7 @@ exports.addRemove = function(req, res) {
                         if (result) {
                             res.status(200).json(`Video added to Favorites`);
                         } else {
-                            res.status(400).json("error");
+                            res.status(400).json("Error");
                         }
                     }).catch (error => {
                         res.status(400).json({message:error});

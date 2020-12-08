@@ -16,6 +16,9 @@ let {isSupAdmin} = require('../../middleware/isSupAdmin.js');
 // Get Item List
 router.get('/', controller.listAll);
 
+// Get Items List with relations
+router.get('/relations', controller.listAllRelations);
+
 // Get Item by Id
 router.get('/:id', [
     param('id').notEmpty().escape(), 
@@ -23,6 +26,18 @@ router.get('/:id', [
     const errors = validationResult(req); 
     if (errors.isEmpty()) {
         controller.getItem(req, res); 
+    } else {
+        res.status(400).json({errors: errors.array()})
+    }
+})
+
+// Get Item by Id with relations
+router.get('/:id/relations', [
+    param('id').notEmpty().escape(), 
+],  function (req, res) {
+    const errors = validationResult(req); 
+    if (errors.isEmpty()) {
+        controller.getItemRelations(req, res); 
     } else {
         res.status(400).json({errors: errors.array()})
     }

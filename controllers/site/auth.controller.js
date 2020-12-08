@@ -35,9 +35,15 @@ exports.register = function(req, res) {
                 username: req.body.username,
                 email: req.body.email,
                 password: hash,
-            }).then(user => {
-                res.status(200).json("User Created");
-            })
+            }).then(result => {
+                if(result) {
+                    res.status(200).json("User Created");
+                } else {
+                    res.status(400).json("Error");
+                }
+            }).catch (error => {
+                res.status(400).json({message:error});
+            });
         });
     });
 }

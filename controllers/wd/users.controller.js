@@ -2,9 +2,25 @@ const models = require('../../models');
 const token = require('../../utilities/token');
 
 // Get List of Users
-exports.listAll = async function(req, res) {
+exports.listAll = function(req, res) {
     return models.User.findAll({
         include: { model: models.Video }
+    }).then (items => {
+        res.status(200).json(items);
+    }).catch (error => {
+        res.status(400).json({message:error});
+    });
+}
+
+// Gel All items wich Relations
+exports.listAllRelations = function(req, res) {
+    return models.User.findAll({
+        include: [
+            { model: models.Comment },
+            { model: models.Favorite,
+                include: {model: models.Video}
+            }
+        ]
     }).then (items => {
         res.status(200).json(items);
     }).catch (error => {
@@ -19,6 +35,23 @@ exports.getItem = function(req, res) {
     }).then(item => {
         res.status(200).json(item);
     }).catch (error => {
+        res.status(400).json({message:error});
+    });
+}
+
+// Get Item by Id
+exports.getItemRelations = async function(req, res) {
+    return models.User.findOne({
+        where: { id: req.params.id },
+        include: [
+            { model: models.Comment },
+            { model: models.Favorite,
+                include: {model: models.Video}
+            }
+        ]
+    }).then(item => {
+        res.status(200).json(item);
+    }).catch(error => {
         res.status(400).json({message:error});
     });
 }

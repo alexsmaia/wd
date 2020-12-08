@@ -16,7 +16,7 @@ let {isSupAdmin} = require('../../middleware/isSupAdmin.js');
 // Get All Items
 router.get('/', controller.listAll);
 
-// Get Items List with relations
+// Get All Items with relations
 router.get('/relations', controller.listAllRelations);
 
 // Get Item by Id

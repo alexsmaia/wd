@@ -31,8 +31,8 @@ exports.listAllRelations = function(req, res) {
 exports.getItem = async function(req, res) {
     return models.Video.findOne({
         where: { id: req.params.id }
-    }).then(video => {
-        res.status(200).json(video);
+    }).then(item => {
+        res.status(200).json(item);
     }).catch(error => {
         res.status(400).json({message:error});
     });
@@ -49,8 +49,8 @@ exports.getItemRelations = async function(req, res) {
                 include: {model: models.User}
             }
         ]
-    }).then(video => {
-        res.status(200).json(video);
+    }).then(item => {
+        res.status(200).json(item);
     }).catch(error => {
         res.status(400).json({message:error});
     });
@@ -64,7 +64,8 @@ exports.add = function(req, res) {
     let newItem = {};
     newItem.title = req.body.title;
     newItem.youtubeid = req.body.youtubeid;
-    return models.Video.create(newItem).then(video => {
+    return models.Video.create(newItem)
+    .then(video => {
         topicIds.forEach(topicId => {
             video.addTopics(topicId.id);
         });
@@ -76,7 +77,6 @@ exports.add = function(req, res) {
 
 // Update Item
 exports.update = function(req, res) {
-    // ToDo - Check diference topics ids
     // Get Topic Id's
     let topicIds = req.body.topics;
     // Get new Video data
@@ -132,12 +132,10 @@ exports.delete = function(req, res) {
 }
 
 // Change Item Satus
-exports.status = async function(req, res) {
-    try {
-        // Get Topic
-        const item = await models.Video.findOne({
-            where: { id: req.params.id }
-        });
+exports.status = function(req, res) {
+    return models.Video.findOne({
+        where: { id: req.params.id }
+    }).then(item => {
         if (item.id > 0) {
             let itemStatus = {};
             if (item.status) {
@@ -146,26 +144,22 @@ exports.status = async function(req, res) {
                 itemStatus.status = true;
             }
             return models.Video.update(itemStatus, {
-                where : {
-                    id : item.id
-                }
+                where : { id : item.id }
             }).then(result => {
                 if (result) {
                     if (itemStatus.status) {
-                        res.status(200).json(`Video ${item.title} Active`);
+                        res.status(200).json(`Video Published`);
                     } else {
-                        res.status(200).json(`Video ${item.title} Inactive`);
+                        res.status(200).json(`Video Unpublished`);
                     }
                 } else {
                     res.status(400).json("Error");
                 }
             }).catch(error => {
                 res.status(400).json({message:error});
-            })
-        } else {
-            res.status(400).json("Error"); 
+            });
         }
-    } catch (error) {
+    }).catch(error => {
         res.status(400).json({message:error});
-    }
+    })
 }

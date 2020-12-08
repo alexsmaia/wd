@@ -52,7 +52,7 @@ exports.profileFavorites = function(req, res) {
     })
 }
 
-// Update Item
+// Update User
 exports.update = function(req, res) { 
     token.getLogedUser(req.headers.authorization, (logedUser) => {
         // Get User to Update

@@ -63,14 +63,28 @@ exports.delete = function(req, res) {
         if (logedUserId == req.params.id) {
             res.status(409).json("Can't delete yourself");
         } else {
-            // Delete User
-            return models.User.destroy({
-                where : { id : req.params.id }
-            }).then(result => {
-                if(result) {
-                    res.status(200).json("User Deleted");
+            // Check if item have related items
+            return models.User.findOne({
+                where : { id : req.params.id },
+                include: [
+                    { model: models.Comment },
+                    { model: models.Favorite}
+                ]
+            }).then(item => {
+                if (item.Comments.length > 0 || item.Favorites.length > 0) {
+                    res.status(409).json("Can't delete record with associated item!!");
                 } else {
-                    res.status(400).json("error");
+                    // Delete Item
+                    return item.destroy()
+                    .then(result => {
+                        if(result) {
+                            res.status(200).json("User Deleted");
+                        } else {
+                            res.status(400).json("error");
+                        }
+                    }).catch(error => {
+                        res.status(400).json({message:error});
+                    });
                 }
             }).catch(error => {
                 res.status(400).json({message:error});

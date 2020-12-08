@@ -118,13 +118,29 @@ exports.update = function(req, res) {
 
 // Delete Item
 exports.delete = function(req, res) {
-    return models.Video.destroy({
-        where : { id : req.params.id }
-    }).then(result => {
-        if (result) {
-            res.status(200).json("Video Deleted");
+    return models.Video.findOne({
+        where: { id: req.params.id },
+        include: [
+            { model: models.Topic },
+            { model: models.Comment },
+            { model: models.Favorite }
+        ]
+    }).then(item => {
+        // Check if item have related items
+        if (item.Topics.length > 0 || item.Comments.length > 0 || item.Favorites.length > 0) {
+            res.status(409).json("Can't delete record with associated item!!");
         } else {
-            res.status(400).json("error");
+            // Delete Item
+            return item.destroy()
+            .then(result => {
+                if(result) {
+                    res.status(200).json("Video Deleted");
+                } else {
+                    res.status(400).json("error");
+                }
+            }).catch(error => {
+                res.status(400).json({message:error});
+            });
         }
     }).catch(error => {
         res.status(400).json({message:error});

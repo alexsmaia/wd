@@ -9,6 +9,12 @@ const { validationResult, body } = require('express-validator')
 const models = require('../../models');
 
 // Set Routes
+
+// Home 
+router.get('/', function(req, res) {
+    res.redirect('/api-docs');
+});
+
 // User Login
 router.post('/login', [
     body('username').notEmpty().escape(),
